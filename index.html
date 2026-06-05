@@ -2974,6 +2974,7 @@ async function loadReviews() {
   if (!grid) return;
   grid.innerHTML = '<div class="review-loader">Loading reviews...</div>';
 
+  const localReviews = getLocalReviews();
   let reviews = [];
 
   if (supabaseClient) {
@@ -2984,13 +2985,13 @@ async function loadReviews() {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      reviews = data || [];
+      reviews = mergeReviews(data || [], localReviews);
     } catch (err) {
       console.warn("Supabase fetch failed, falling back to local reviews:", err);
-      reviews = getLocalReviews();
+      reviews = localReviews;
     }
   } else {
-    reviews = getLocalReviews();
+    reviews = localReviews;
   }
 
   grid.innerHTML = '';
@@ -3002,6 +3003,33 @@ async function loadReviews() {
   reviews.forEach(review => {
     addNewReviewToUI(review, false);
   });
+}
+
+function mergeReviews(remoteReviews, localReviews) {
+  const seen = new Set();
+  const merged = [];
+
+  function reviewKey(review) {
+    return `${(review.name || '').trim().toLowerCase()}|${(review.instagram || '').trim().toLowerCase()}|${(review.comment || '').trim().toLowerCase()}|${(review.created_at || '').trim()}`;
+  }
+
+  for (const review of remoteReviews) {
+    const key = reviewKey(review);
+    if (!seen.has(key)) {
+      seen.add(key);
+      merged.push(review);
+    }
+  }
+
+  for (const review of localReviews) {
+    const key = reviewKey(review);
+    if (!seen.has(key)) {
+      seen.add(key);
+      merged.push(review);
+    }
+  }
+
+  return merged.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 }
 
 function getLocalReviews() {
@@ -3241,6 +3269,12 @@ runWhenReady(() => {
     }
   }
 
+  function countEmojis(text) {
+    if (!text) return 0;
+    const emojiRegex = /(?:[\u203C-\u3299]|[\uD83C-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27BF])/g;
+    return (text.match(emojiRegex) || []).length;
+  }
+
   // --- Form Submit ---
   if (form) {
     const stars = ratingSelect ? ratingSelect.querySelectorAll('span') : [];
@@ -3288,7 +3322,7 @@ runWhenReady(() => {
       }
 
       // Reject too many emojis
-      const emojiCount = (comment.match(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu) || []).length;
+      const emojiCount = countEmojis(comment);
       if (emojiCount > 5) {
         showToast('Please use fewer than 6 emojis in your review.', 'error', 5000);
         formError = 'Please use fewer than 6 emojis in your review.';
