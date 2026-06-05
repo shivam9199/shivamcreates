@@ -623,15 +623,58 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(circle 
   100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
 }
 @keyframes orangePulse {
-  0% { box-shadow: 0 0 0 0 rgba(255, 77, 0, 0.4); }
-  70% { box-shadow: 0 0 0 12px rgba(255, 77, 0, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(255, 77, 0, 0.32); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 77, 0, 0); }
   100% { box-shadow: 0 0 0 0 rgba(255, 77, 0, 0); }
 }
-.wa-btn {
-  animation: waPulse 2s infinite;
+@keyframes contactSpark {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.25); }
+  30% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.3); }
 }
-.btn-primary, .price-card.popular .price-cta {
-  animation: orangePulse 2.5s infinite;
+.pulse-btn {
+  animation: orangePulse 3s infinite;
+}
+.nav-cta {
+  position: relative;
+  overflow: hidden;
+}
+.nav-cta::before {
+  content: '';
+  position: absolute;
+  inset: -18px;
+  background: radial-gradient(circle at 20% 20%, rgba(255, 183, 0, 0.16), transparent 40%);
+  opacity: 0.8;
+  pointer-events: none;
+}
+.nav-cta::after {
+  content: '';
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  top: 10%;
+  right: -24px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.35), rgba(255, 77, 0, 0) 55%);
+  opacity: 0.6;
+  transform: translateX(0);
+  transition: transform 0.35s ease;
+  pointer-events: none;
+}
+.nav-cta:hover::after {
+  transform: translateX(-8px);
+}
+.nav-particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,153,51,0.8) 40%, rgba(255,77,0,0) 90%);
+  pointer-events: none;
+  animation: contactSpark 0.9s ease-out forwards;
+}
+@media (max-width: 768px) {
+  .section-particles { display: none !important; }
 }
 
 /* Reviews Style */
@@ -1628,7 +1671,7 @@ body::before {
       <a href="#work">Work</a>
       <a href="#about">About</a>
     </nav>
-    <a class="nav-cta" href="https://wa.me/9199495542?text=Hi%20Shivam%2C%20I%20saw%20your%20portfolio%20and%20really%20liked%20your%20work.%20I%20want%20to%20discuss%20a%20project%20and%20pricing." target="_blank">Contact</a>
+    <a class="nav-cta pulse-btn" href="https://wa.me/9199495542?text=Hi%20Shivam%2C%20I%20saw%20your%20portfolio%20and%20really%20liked%20your%20work.%20I%20want%20to%20discuss%20a%20project%20and%20pricing." target="_blank">Contact</a>
     <button class="menu-btn" aria-label="Toggle Menu">
       <span></span>
       <span></span>
@@ -1894,7 +1937,7 @@ body::before {
     <div class="about-graphic-wrap" style="position:relative;overflow:hidden;">
       <canvas class="section-particles" data-color1="255,77,0" data-color2="255,160,0" data-fire="true" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;opacity:0.9;"></canvas>
       <div class="about-graphic-glow"></div>
-      <img src="https://res.cloudinary.com/dpdv9jqav/image/upload/f_auto,q_auto/v1780687880/portfolio_images/shivam_founder_v2.jpg" alt="Shivam" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; border-radius: 18px; z-index: 1;">
+      <img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="https://res.cloudinary.com/dpdv9jqav/image/upload/f_auto,q_auto/v1780687880/portfolio_images/shivam_founder_v2.jpg" alt="Shivam" loading="lazy" decoding="async" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; border-radius: 18px; z-index: 1;">
       <div class="about-graphic-badge">FOUNDER</div>
     </div>
     
@@ -1945,7 +1988,7 @@ body::before {
 <section class="proof-section">
   <div class="proof-card-single">
     <div class="insta-icon">
-      <img src="/instagram/instagram.png" alt="Instagram" style="width:36px;height:36px;object-fit:contain;" id="proofInstaIcon" onerror="this.style.display='none';document.getElementById('proofInstaSvg').style.display='inline-block';">
+      <img src="/instagram/instagram.png" alt="Instagram" loading="lazy" decoding="async" style="width:36px;height:36px;object-fit:contain;" id="proofInstaIcon" onerror="this.style.display='none';document.getElementById('proofInstaSvg').style.display='inline-block';">
       <svg id="proofInstaSvg" width="36" height="36" viewBox="0 0 24 24" fill="url(#instagram-gradient)" style="display:none;">
         <defs>
           <radialGradient id="instagram-gradient" cx="0.5" cy="0.5" r="0.5">
@@ -2109,7 +2152,7 @@ body::before {
     Message me on WhatsApp
   </a>
   <a class="insta-btn" href="https://instagram.com/rewire_sync" target="_blank">
-    <img src="/instagram/instagram.png" alt="Instagram" class="insta-btn-icon" id="instaIcon" onerror="this.style.display='none';document.getElementById('instaSvgFallback').style.display='inline-block';">
+    <img src="/instagram/instagram.png" alt="Instagram" class="insta-btn-icon" loading="lazy" decoding="async" id="instaIcon" onerror="this.style.display='none';document.getElementById('instaSvgFallback').style.display='inline-block';">
     <svg class="insta-btn-icon insta-btn-fallback" id="instaSvgFallback" viewBox="0 0 24 24" fill="currentColor" style="display:none;">
       <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
     </svg>
@@ -2140,7 +2183,6 @@ body::before {
   </div>
   <div class="footer-bottom">
     <p>© 2025 ShivamCreates. All rights reserved.</p>
-    <p>Made with ❤️ by <a href="#">Shivam</a></p>
   </div>
 </footer>
 
@@ -2953,6 +2995,66 @@ render(true);
   }
 
   document.querySelectorAll('canvas.section-particles').forEach(initSectionParticle);
+
+  function createContactSpark(host) {
+    const spark = document.createElement('span');
+    spark.className = 'nav-particle';
+    const x = 12 + Math.random() * 76;
+    const y = 18 + Math.random() * 38;
+    spark.style.left = `${x}%`;
+    spark.style.top = `${y}%`;
+    host.appendChild(spark);
+    setTimeout(() => spark.remove(), 950);
+  }
+
+  function initContactSpark() {
+    const buttons = document.querySelectorAll('.nav-cta, .wa-btn');
+    buttons.forEach(button => {
+      let sparkInterval = null;
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            if (sparkInterval) return;
+            sparkInterval = setInterval(() => {
+              if (!document.body.contains(button)) {
+                clearInterval(sparkInterval);
+                sparkInterval = null;
+                return;
+              }
+              createContactSpark(button);
+            }, 1400 + Math.random() * 800);
+          } else if (sparkInterval) {
+            clearInterval(sparkInterval);
+            sparkInterval = null;
+          }
+        });
+      }, { threshold: 0.35 });
+      observer.observe(button);
+    });
+  }
+
+  function initMobileSectionLoading() {
+    const lazySections = document.querySelectorAll('.about-section, .proof-section, .faq-section, .reviews-section, .bottom-cta');
+    if (!lazySections.length) return;
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('section-visible');
+        entry.target.querySelectorAll('img[data-src]').forEach(img => {
+          if (img.dataset.src) {
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+          }
+        });
+        obs.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -140px 0px', threshold: 0.2 });
+    lazySections.forEach(section => observer.observe(section));
+  }
+
+  // Initialize directly (DOM is ready at this point)
+  initContactSpark();
+  initMobileSectionLoading();
 })();
 
 // ---- REVIEWS & SUPABASE INTEGRATION ----
