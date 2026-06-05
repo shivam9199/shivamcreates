@@ -3516,10 +3516,21 @@ runWhenReady(() => {
             comment: newReview.comment,
             created_at: newReview.created_at
           };
+          console.log('🚀 Attempting Supabase insert with data:', supabaseData);
           const { error } = await supabaseClient
             .from('reviews')
             .insert([supabaseData]);
-          if (error) throw error;
+          if (error) {
+            console.error('❌ Supabase insert error:', {
+              message: error.message,
+              code: error.code,
+              status: error.status,
+              details: error.details,
+              hint: error.hint
+            });
+            throw error;
+          }
+          console.log('✅ Supabase insert successful!');
           savedToSupabase = true;
           saveLocalReview(newReview);
           addNewReviewToUI(newReview, true);
