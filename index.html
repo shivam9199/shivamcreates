@@ -1717,7 +1717,8 @@ body::before {
   </div>
 
   <!-- Card 2: Standard (Popular) -->
-  <div class="price-card popular stagger-item">
+  <div class="price-card popular stagger-item" style="position:relative;overflow:hidden;">
+    <canvas class="section-particles" data-color1="255,77,0" data-color2="255,183,0" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.7;"></canvas>
     <div class="popular-badge">Most Popular</div>
     <div class="price-header">
       <div class="price-title typewrite" data-text="Standard Package">Standard Package</div>
@@ -1811,7 +1812,7 @@ body::before {
     <!-- Left Column: Stylized Cinematic Cam Icon -->
     <div class="about-graphic-wrap">
       <div class="about-graphic-glow"></div>
-      <img src="https://res.cloudinary.com/dpdv9jqav/image/upload/v1780686018/portfolio_images/shivam_avatar.png" alt="Shivam" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 18px; z-index: 1;">
+      <img src="https://res.cloudinary.com/dpdv9jqav/image/upload/f_auto,q_auto/v1780687880/portfolio_images/shivam_founder_v2.jpg" alt="Shivam" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; border-radius: 18px; z-index: 1;">
       <div class="about-graphic-badge">FOUNDER</div>
     </div>
     
@@ -1949,7 +1950,8 @@ body::before {
   <div class="section-title">Reviews &amp; <span class="accent">Testimonials</span></div>
 </div>
 
-<div class="reviews-section">
+<div class="reviews-section" style="position:relative;overflow:hidden;">
+  <canvas class="section-particles" data-color1="255,77,0" data-color2="255,183,0" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.5;"></canvas>
   <div class="reviews-controls">
     <button class="btn-primary" id="openReviewModalBtn">✨ Leave a Review</button>
   </div>
@@ -1996,7 +1998,8 @@ body::before {
 </div>
 
 <!-- BOTTOM CTA -->
-<div class="bottom-cta">
+<div class="bottom-cta" style="position:relative;overflow:hidden;">
+  <canvas class="section-particles" data-color1="37,211,102" data-color2="255,183,0" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.6;"></canvas>
   <h2>Ready to work together?</h2>
   <p>Message me now — you'll get a quote within 1 hour.</p>
   <a class="wa-btn" href="https://wa.me/9199495542?text=Hi%20Shivam%2C%20I%20saw%20your%20portfolio%20and%20really%20liked%20your%20work.%20I%20want%20to%20discuss%20a%20project%20and%20pricing." target="_blank">
@@ -2753,6 +2756,75 @@ render(true);
   } else {
     init(); draw();
   }
+})();
+
+// ---- SECTION PARTICLE CANVASES (Popular card, Reviews, Contact CTA) ----
+(function() {
+  function initSectionParticle(canvas) {
+    const ctx = canvas.getContext('2d');
+    const c1 = canvas.dataset.color1 || '255,77,0';
+    const c2 = canvas.dataset.color2 || '255,183,0';
+    const COLORS = [`rgba(${c1},`, `rgba(${c2},`, `rgba(${c1},`];
+    let W, H, particles = [], animId = null;
+    const COUNT = 28;
+
+    function resize() {
+      W = canvas.width  = canvas.parentElement ? canvas.parentElement.offsetWidth  : 300;
+      H = canvas.height = canvas.parentElement ? canvas.parentElement.offsetHeight : 200;
+    }
+
+    function mkParticle() {
+      return {
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: Math.random() * 1.5 + 0.3,
+        dx: (Math.random() - 0.5) * 0.3,
+        dy: -(Math.random() * 0.35 + 0.08),
+        alpha: Math.random() * 0.55 + 0.08,
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        life: Math.random() * 180 + 80,
+        age: Math.random() * 80 // stagger starts
+      };
+    }
+
+    function start() {
+      if (animId) return;
+      resize();
+      if (!particles.length) particles = Array.from({ length: COUNT }, mkParticle);
+      const resizeFn = () => resize();
+      window.addEventListener('resize', resizeFn, { passive: true });
+      canvas._stopResize = () => window.removeEventListener('resize', resizeFn);
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        particles.forEach((p, i) => {
+          p.age++;
+          if (p.age > p.life) { particles[i] = mkParticle(); particles[i].y = H + 3; return; }
+          const fade = p.age < 25 ? p.age / 25 : (p.life - p.age) < 35 ? (p.life - p.age) / 35 : 1;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = p.color + (p.alpha * fade) + ')';
+          ctx.fill();
+          p.x += p.dx;
+          p.y += p.dy;
+        });
+        animId = requestAnimationFrame(draw);
+      }
+      draw();
+    }
+
+    function stop() {
+      if (animId) { cancelAnimationFrame(animId); animId = null; }
+      if (canvas._stopResize) canvas._stopResize();
+    }
+
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) start(); else stop(); });
+    }, { threshold: 0.05 });
+    obs.observe(canvas);
+  }
+
+  document.querySelectorAll('canvas.section-particles').forEach(initSectionParticle);
 })();
 
 // ---- REVIEWS & SUPABASE INTEGRATION ----
