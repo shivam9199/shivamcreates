@@ -3002,6 +3002,27 @@ runWhenReady(async () => {
 
 // Use only genuine reviews from Supabase or user local submissions.
 const DEFAULT_REVIEWS = [];
+const FAKE_REVIEW_SIGNATURES = [
+  { name: 'aman sharma', instagram: '@aman_edits' },
+  { name: 'rehan khan', instagram: '@rehan_fx' },
+  { name: 'sara kapoor', instagram: '@sara_vlogs' }
+];
+
+function isFakeReview(review) {
+  if (!review) return false;
+  const name = (review.name || '').trim().toLowerCase();
+  const instagram = (review.instagram || '').trim().toLowerCase();
+  const comment = (review.comment || '').trim().toLowerCase();
+  if (FAKE_REVIEW_SIGNATURES.some(sig => sig.name === name || sig.instagram === instagram)) {
+    return true;
+  }
+  if (comment.includes('amazing edits! shivam understands retention') ||
+      comment.includes('fast delivery and perfect sound design') ||
+      comment.includes('working with shivam was so smooth')) {
+    return true;
+  }
+  return false;
+}
 
 // Load reviews
 async function loadReviews() {
@@ -3009,7 +3030,7 @@ async function loadReviews() {
   if (!grid) return;
   grid.innerHTML = '<div class="review-loader">Loading reviews...</div>';
 
-  const localReviews = getLocalReviews();
+  const localReviews = getLocalReviews().filter(review => !isFakeReview(review));
   let reviews = [];
 
   if (supabaseClient) {
@@ -3020,7 +3041,7 @@ async function loadReviews() {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      reviews = mergeReviews(data || [], localReviews);
+      reviews = mergeReviews(data || [], localReviews).filter(review => !isFakeReview(review));
     } catch (err) {
       console.warn("Supabase fetch failed, falling back to local reviews:", err);
       reviews = localReviews;
@@ -3071,7 +3092,12 @@ function getLocalReviews() {
   try {
     const stored = localStorage.getItem('shivam_creates_reviews');
     if (stored) {
-      return JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      const filtered = Array.isArray(parsed) ? parsed.filter(review => !isFakeReview(review)) : [];
+      if (Array.isArray(parsed) && filtered.length !== parsed.length) {
+        localStorage.setItem('shivam_creates_reviews', JSON.stringify(filtered));
+      }
+      return filtered;
     }
   } catch (e) {
     console.warn("localStorage is not accessible, using empty review state:", e);
