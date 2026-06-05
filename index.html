@@ -936,7 +936,64 @@ body::before {
   .stat-num{font-size:18px;}
   .services{grid-template-columns:1fr;padding:0 4vw;gap:12px;}
   .service-card{padding:18px 16px;}
-  .section-head{padding:32px 4vw 12px;}
+/* REVIEW TOAST NOTIFICATION */
+.review-toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: #1a1a1a;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 24px;
+  font-size: 14px;
+  color: #fff;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  opacity: 0;
+  white-space: nowrap;
+  max-width: 90vw;
+}
+.review-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+.review-toast.toast-success { border-color: rgba(37,211,102,0.4); }
+.review-toast.toast-error { border-color: rgba(255,77,0,0.4); }
+.review-toast.toast-warn { border-color: rgba(255,183,0,0.4); }
+
+/* CHAR COUNTER */
+.char-counter {
+  text-align: right;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+  transition: color 0.2s;
+}
+.char-counter.warn { color: var(--accent2); }
+.char-counter.danger { color: var(--accent); }
+
+/* REASON FIELD */
+.reason-group {
+  display: none;
+  animation: fadeUp 0.3s ease;
+}
+.reason-group.visible { display: block; }
+
+/* FORM ERROR STATE */
+.form-group input.error,
+.form-group textarea.error {
+  border-color: var(--accent) !important;
+  background: rgba(255,77,0,0.04) !important;
+}
+.field-error {
+  font-size: 11.5px;
+  color: var(--accent);
+  margin-top: 4px;
+  display: none;
+}
+.field-error.show { display: block; }
   .section-title{font-size:22px;}
   .stack-wrap{max-width:240px;}
   .bottom-cta{margin:24px 4vw 48px;padding:24px 18px;}
@@ -1968,33 +2025,50 @@ body::before {
     <button class="modal-close" id="closeReviewModalBtn">&times;</button>
     <div class="modal-header">
       <h3>Leave a Review</h3>
-      <p>Share your experience working with me!</p>
+      <p>Share your honest experience working with me!</p>
     </div>
-    <form id="reviewForm">
+    <form id="reviewForm" autocomplete="off">
+      <div style="position:absolute;left:-9999px;opacity:0;pointer-events:none;" aria-hidden="true">
+        <input type="text" id="reviewHoneypot" tabindex="-1" autocomplete="nope">
+      </div>
       <div class="form-group">
         <label for="reviewName">Your Name *</label>
-        <input type="text" id="reviewName" required placeholder="e.g. John Doe">
+        <input type="text" id="reviewName" required maxlength="50" placeholder="e.g. John Doe">
+        <div class="field-error" id="nameError" style="display:none;color:#ff4d00;font-size:12px;margin-top:4px;">Please enter your name (min 2 characters).</div>
       </div>
       <div class="form-group">
-        <label for="reviewInsta">Instagram Handle (Optional)</label>
-        <input type="text" id="reviewInsta" placeholder="e.g. @john_edits">
+        <label for="reviewInsta">Instagram Handle <span style="color:#888;font-weight:400;">(Optional)</span></label>
+        <input type="text" id="reviewInsta" maxlength="40" placeholder="e.g. @john_edits">
       </div>
       <div class="form-group">
-        <label>Rating *</label>
+        <label>Your Rating *</label>
         <div class="rating-select" id="ratingSelect">
-          <span data-val="1">★</span>
-          <span data-val="2">★</span>
-          <span data-val="3">★</span>
-          <span data-val="4">★</span>
-          <span data-val="5" class="selected">★</span>
+          <span data-val="1">&#9733;</span>
+          <span data-val="2">&#9733;</span>
+          <span data-val="3">&#9733;</span>
+          <span data-val="4">&#9733;</span>
+          <span data-val="5" class="selected">&#9733;</span>
         </div>
         <input type="hidden" id="reviewRating" value="5">
       </div>
-      <div class="form-group">
-        <label for="reviewComment">Review Comment *</label>
-        <textarea id="reviewComment" rows="4" required placeholder="What was it like working with Shivam?"></textarea>
+      <div class="form-group reason-group" id="reasonGroup" style="display:none;">
+        <label for="reviewReason">What went wrong? <span style="color:var(--accent);font-size:11px;">*Required</span></label>
+        <select id="reviewReason" style="width:100%;background:#181818;border:1px solid #333;border-radius:8px;padding:10px 14px;color:#fff;cursor:pointer;">
+          <option value="">Select a reason...</option>
+          <option value="late_delivery">Delivery was late</option>
+          <option value="quality">Quality issues</option>
+          <option value="communication">Communication</option>
+          <option value="other">Other</option>
+        </select>
+        <div class="field-error" id="reasonError" style="display:none;color:#ff4d00;font-size:12px;margin-top:4px;">Please select a reason.</div>
       </div>
-      <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">Submit Review</button>
+      <div class="form-group">
+        <label for="reviewComment">Your Review *</label>
+        <textarea id="reviewComment" rows="4" required maxlength="300" placeholder="What was it like working with Shivam? (max 300)"></textarea>
+        <div class="char-counter" id="charCounter" style="text-align:right;font-size:11px;color:#888;margin-top:4px;">0 / 300</div>
+        <div class="field-error" id="commentError" style="display:none;color:#ff4d00;font-size:12px;margin-top:4px;">Review must be 20-300 chars.</div>
+      </div>
+      <button type="submit" class="btn-primary" id="reviewSubmitBtn" style="width:100%;justify-content:center;">Submit Review</button>
     </form>
   </div>
 </div>
@@ -3014,51 +3088,117 @@ function escapeHTML(str) {
   );
 }
 
+// ---- REVIEW SYSTEM: Moderation + Anti-Spam + Validation ----
+
+// --- Content Moderation Word List (English + Hindi transliteration) ---
+const BLOCKED_WORDS = [
+  // English profanity
+  'fuck','shit','bitch','bastard','asshole','ass','cunt','damn','crap','piss','dick','cock',
+  'pussy','slut','whore','nigga','nigger','faggot','retard','idiot','moron','stupid','dumb',
+  // Hindi transliteration
+  'bsdk','bc','mc','lodu','chutiya','gandu','madarchod','bhenchod','maderchod','bhosdi',
+  'gaand','randi','harami','haraami','saala','kamina','sala','behen','teri maa','maa ki',
+  'kutte','kuttey','suar','gadha','ullu','chodu','bhosdike','lauda','lavda',
+  // Scam / abuse words
+  'scam','fraud','liar','cheat','scammer','thief','cheater','fake'
+];
+
+function moderateText(text) {
+  const lower = text.toLowerCase();
+  // Check for blocked words (whole-word and partial match for transliterated words)
+  for (const word of BLOCKED_WORDS) {
+    if (lower.includes(word)) {
+      return { blocked: true, word };
+    }
+  }
+  return { blocked: false };
+}
+
+// --- Toast Notification ---
+function showToast(message, type = 'success', duration = 4000) {
+  let toast = document.getElementById('reviewToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'reviewToast';
+    toast.className = 'review-toast';
+    document.body.appendChild(toast);
+  }
+  toast.className = `review-toast toast-${type}`;
+  const icons = { success: '✅', error: '🚫', warn: '⚠️', info: 'ℹ️' };
+  toast.innerHTML = `<span>${icons[type] || '💬'}</span> ${message}`;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => toast.classList.add('show'));
+  });
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => {
+    toast.classList.remove('show');
+  }, duration);
+}
+
+// --- Anti-Spam: 1 review per 24 hours per device ---
+function canSubmitReview() {
+  try {
+    const last = localStorage.getItem('sc_review_ts');
+    if (!last) return true;
+    return (Date.now() - parseInt(last)) > 24 * 60 * 60 * 1000;
+  } catch { return true; }
+}
+function markReviewSubmitted() {
+  try { localStorage.setItem('sc_review_ts', Date.now().toString()); } catch {}
+}
+
 // Modal handling
 runWhenReady(() => {
-  const modal = document.getElementById('reviewModal');
-  const openBtn = document.getElementById('openReviewModalBtn');
-  const closeBtn = document.getElementById('closeReviewModalBtn');
-  const form = document.getElementById('reviewForm');
+  const modal       = document.getElementById('reviewModal');
+  const openBtn     = document.getElementById('openReviewModalBtn');
+  const closeBtn    = document.getElementById('closeReviewModalBtn');
+  const form        = document.getElementById('reviewForm');
   const ratingSelect = document.getElementById('ratingSelect');
-  const ratingInput = document.getElementById('reviewRating');
+  const ratingInput  = document.getElementById('reviewRating');
+  const reasonGroup  = document.getElementById('reasonGroup');
+  const charCounter  = document.getElementById('charCounter');
+  const commentTA    = document.getElementById('reviewComment');
+  const submitBtn    = document.getElementById('reviewSubmitBtn');
+  const submitText   = document.getElementById('submitBtnText');
 
-  if (openBtn && modal) {
-    openBtn.addEventListener('click', () => {
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
+  // --- Open / Close Modal ---
+  function openModal() {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  if (openBtn)  openBtn.addEventListener('click', openModal);
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  if (modal)    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+
+  // --- Live Character Counter ---
+  if (commentTA && charCounter) {
+    commentTA.addEventListener('input', () => {
+      const len = commentTA.value.length;
+      charCounter.textContent = `${len} / 300`;
+      charCounter.className = 'char-counter' + (len > 270 ? ' danger' : len > 220 ? ' warn' : '');
     });
   }
 
-  if (closeBtn && modal) {
-    closeBtn.addEventListener('click', () => {
-      modal.classList.remove('active');
-      document.body.style.overflow = '';
-    });
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
-      }
-    });
-  }
-
-  // Star selector
+  // --- Star Rating + Reason Group ---
   if (ratingSelect) {
     const stars = ratingSelect.querySelectorAll('span');
     stars.forEach(star => {
       star.addEventListener('click', () => {
         const val = parseInt(star.dataset.val);
         ratingInput.value = val;
-        stars.forEach(s => {
-          s.classList.toggle('selected', val >= parseInt(s.dataset.val));
-        });
+        stars.forEach(s => s.classList.toggle('selected', val >= parseInt(s.dataset.val)));
+        // Show reason group for low ratings (1-3 stars)
+        if (reasonGroup) {
+          reasonGroup.classList.toggle('visible', val <= 3);
+        }
       });
       star.addEventListener('mouseenter', () => {
         const val = parseInt(star.dataset.val);
-        stars.forEach(s => {
-          s.classList.toggle('hovered', val >= parseInt(s.dataset.val));
-        });
+        stars.forEach(s => s.classList.toggle('hovered', val >= parseInt(s.dataset.val)));
       });
       ratingSelect.addEventListener('mouseleave', () => {
         stars.forEach(s => s.classList.remove('hovered'));
@@ -3066,56 +3206,128 @@ runWhenReady(() => {
     });
   }
 
-  // Submit form
+  // --- Form Validation Helper ---
+  function setError(inputId, errorId, show) {
+    const inp = document.getElementById(inputId);
+    const err = document.getElementById(errorId);
+    if (inp) inp.classList.toggle('error', show);
+    if (err) err.classList.toggle('show', show);
+    return show;
+  }
+
+  // --- Form Submit ---
   if (form) {
     const stars = ratingSelect ? ratingSelect.querySelectorAll('span') : [];
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
-      const name = document.getElementById('reviewName').value.trim();
-      let instagram = document.getElementById('reviewInsta').value.trim();
-      const rating = parseInt(ratingInput.value);
-      const comment = document.getElementById('reviewComment').value.trim();
 
-      if (instagram && !instagram.startsWith('@')) {
-        instagram = '@' + instagram;
+      // 1. HONEYPOT CHECK (bot detection)
+      const honeypot = document.getElementById('reviewHoneypot');
+      if (honeypot && honeypot.value.trim() !== '') {
+        showToast('Submission blocked.', 'error');
+        return;
       }
+
+      // 2. ANTI-SPAM: rate limit
+      if (!canSubmitReview()) {
+        showToast('You can only submit one review every 24 hours. Thank you!', 'warn', 5000);
+        closeModal();
+        return;
+      }
+
+      const name    = document.getElementById('reviewName').value.trim();
+      let instagram  = document.getElementById('reviewInsta').value.trim();
+      const rating   = parseInt(ratingInput.value);
+      const comment  = commentTA ? commentTA.value.trim() : '';
+      const reason   = document.getElementById('reviewReason') ? document.getElementById('reviewReason').value : '';
+
+      // 3. FIELD VALIDATION
+      let hasError = false;
+      if (name.length < 2) hasError = setError('reviewName', 'nameError', true) || hasError;
+      else setError('reviewName', 'nameError', false);
+
+      if (comment.length < 20) hasError = setError('reviewComment', 'commentError', true) || hasError;
+      else setError('reviewComment', 'commentError', false);
+
+      // Low rating requires reason
+      if (rating <= 3 && !reason) {
+        hasError = setError('reviewReason', 'reasonError', true) || hasError;
+      } else {
+        setError('reviewReason', 'reasonError', false);
+      }
+
+      if (hasError) {
+        showToast('Please fill in all required fields correctly.', 'error');
+        return;
+      }
+
+      // 4. CONTENT MODERATION
+      const nameCheck    = moderateText(name);
+      const commentCheck = moderateText(comment);
+      if (nameCheck.blocked || commentCheck.blocked) {
+        showToast('⚠️ Please keep your review respectful and professional. Abusive language is not allowed.', 'error', 6000);
+        if (commentCheck.blocked && commentTA) {
+          commentTA.classList.add('error');
+          setTimeout(() => commentTA.classList.remove('error'), 3000);
+        }
+        return;
+      }
+
+      // 5. FORMAT INSTAGRAM
+      if (instagram && !instagram.startsWith('@')) instagram = '@' + instagram;
+
+      // 6. SUBMIT - show loading
+      if (submitBtn) submitBtn.disabled = true;
+      if (submitText) submitText.textContent = 'Submitting...';
 
       const newReview = {
         name,
         instagram,
         rating,
         comment,
+        reason: rating <= 3 ? reason : null,
         created_at: new Date().toISOString()
       };
+
+      let savedToSupabase = false;
 
       if (supabaseClient) {
         try {
           const { error } = await supabaseClient
             .from('reviews')
             .insert([{ name, instagram, rating, comment }]);
-          
           if (error) throw error;
+          savedToSupabase = true;
+          showToast('🎉 Your review is now live! Thank you!', 'success');
         } catch (err) {
-          console.error("Error saving to Supabase, saving locally instead:", err);
+          console.error('Supabase error, falling back to local:', err);
           saveLocalReview(newReview);
           addNewReviewToUI(newReview, true);
+          showToast('✅ Review submitted! (saved locally)', 'success');
         }
       } else {
         saveLocalReview(newReview);
         addNewReviewToUI(newReview, true);
+        showToast('🎉 Review submitted successfully!', 'success');
       }
 
-      // Reset form & close modal
+      // 7. MARK SUBMITTED (anti-spam)
+      markReviewSubmitted();
+
+      // 8. RESET FORM
       form.reset();
+      if (charCounter) charCounter.textContent = '0 / 300';
+      if (reasonGroup) reasonGroup.classList.remove('visible');
       stars.forEach(s => s.classList.toggle('selected', 5 >= parseInt(s.dataset.val)));
       ratingInput.value = 5;
-      modal.classList.remove('active');
-      document.body.style.overflow = '';
+      if (submitBtn) submitBtn.disabled = false;
+      if (submitText) submitText.textContent = 'Submit Review';
+      closeModal();
 
-      // Scroll to reviews section to see the new review animate in
+      // Scroll to reviews
       const revSec = document.getElementById('reviews');
-      if (revSec) revSec.scrollIntoView({ behavior: 'smooth' });
+      if (revSec) setTimeout(() => revSec.scrollIntoView({ behavior: 'smooth' }), 300);
     });
   }
 
