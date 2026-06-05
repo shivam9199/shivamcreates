@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shivam — Video Editor & AI Creator</title>
+<meta name="description" content="Video Editor & AI Tools Expert — turning raw footage into scroll-stopping content. Reels, YouTube, AI Video. Fast delivery, great quality.">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0b0b;--surface:rgba(17,17,17,0.6);--surface2:rgba(24,24,24,0.6);--accent:#b4ff00;--accent2:#FF4D00;--text:#f0f0f0;--muted:#888;--border:rgba(255,255,255,0.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.35;}
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(circle at 50% 0%, rgba(180,255,0,0.06), transparent 70%);pointer-events:none;z-index:-1;animation:pulseBg 8s ease-in-out infinite alternate;}
+@keyframes pulseBg { from { opacity: 0.5; } to { opacity: 1; transform: scale(1.05); } }
+
+/* HERO */
+.hero-wrap{min-height:100vh;display:flex;align-items:center;justify-content:space-between;padding:60px 6vw;gap:60px;position:relative;overflow:hidden;}
+.hero-wrap::before{content:'';position:absolute;top:-200px;right:-100px;width:600px;height:600px;background:radial-gradient(circle,rgba(180,255,0,0.04) 0%,transparent 70%);pointer-events:none;}
+
+/* LEFT */
+.hero-left{flex:1;min-width:0;}
+.hero-tag{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);display:inline-block;padding:4px 12px;border-radius:3px;margin-bottom:24px;animation:fadeUp .5s ease both;}
+.hero-h1{font-family:'Syne',sans-serif;font-size:clamp(42px,6vw,80px);font-weight:800;line-height:1.0;letter-spacing:-2px;margin-bottom:12px;animation:fadeUp .6s ease both;}
+.hero-h1 span{color:var(--accent);display:block;}
+.hero-sub{font-size:15px;color:var(--muted);margin-bottom:28px;max-width:380px;animation:fadeUp .7s ease both;}
+.hero-badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:36px;animation:fadeUp .8s ease both;}
+.badge{font-size:12px;padding:5px 13px;border-radius:99px;border:1px solid var(--border);background:var(--surface);color:var(--muted);}
+.badge.hot{background:rgba(180,255,0,0.07);border-color:rgba(180,255,0,0.22);color:var(--accent);}
+.cta-row{display:flex;gap:12px;margin-bottom:40px;animation:fadeUp .9s ease both;}
+.btn-primary{background:var(--accent);color:#000;border:none;padding:14px 28px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;border-radius:5px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:7px;transition:transform .15s,box-shadow .2s;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 20px rgba(180,255,0,0.35);}
+.btn-secondary{padding:14px 22px;border:1px solid var(--border);background:transparent;color:var(--text);border-radius:5px;cursor:pointer;font-size:14px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:border-color .15s,background .15s;}
+.btn-secondary:hover{border-color:rgba(255,255,255,0.18);background:var(--surface);}
+
+/* STATS */
+.stats-row{display:flex;gap:2px;background:var(--border);border-radius:10px;overflow:hidden;border:1px solid var(--border);animation:fadeUp 1s ease both;max-width:420px;}
+.stat{background:var(--surface);padding:16px 20px;flex:1;text-align:center;}
+.stat-num{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--accent);display:block;}
+.stat-label{font-size:11px;color:var(--muted);}
+
+/* STACKED CARD SYSTEM */
+.stack-wrap{position:relative;width:100%;max-width:300px;aspect-ratio:9/16;}
+@media(min-width:1024px){.stack-wrap{max-width:320px;}}
+@media(min-width:1280px){.stack-wrap{max-width:340px;}}
+@media(max-width:900px){.stack-wrap{max-width:300px;}}
+@media(max-width:768px){.stack-wrap{max-width:285px;}}
+.stack-glow{position:absolute;inset:-18px;border-radius:42px;background:transparent;box-shadow:0 0 40px 6px rgba(180,255,0,0.22),0 0 80px 12px rgba(180,255,0,0.08);pointer-events:none;z-index:0;}
+.scard{position:absolute;inset:0;border-radius:28px;border:3px solid #1e1e1e;background:#111;overflow:hidden;cursor:grab;user-select:none;will-change:transform;touch-action:pan-y;}
+.scard.is-dragging{cursor:grabbing;transition:none !important;}
+.scard.snap-back{transition:transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease, filter 0.4s ease;}
+.scard[data-pos="0"]{transform:translate(0,0) scale(1);opacity:1;filter:none;z-index:10;box-shadow:0 0 60px rgba(180,255,0,0.2);}
+.scard[data-pos="1"]{transform:translate(12px,-10px) scale(0.93);opacity:0.7;filter:blur(1.5px);z-index:9;}
+.scard[data-pos="2"]{transform:translate(22px,-20px) scale(0.86);opacity:0.4;filter:blur(3px);z-index:8;}
+.scard[data-pos="3"]{transform:translate(30px,-28px) scale(0.79);opacity:0.15;filter:blur(4px);z-index:7;}
+.scard[data-pos="-1"]{transform:translate(-140px,40px) scale(0.7);opacity:0;z-index:6;transition:transform 0.4s ease,opacity 0.4s ease;}
+/* video inside each card */
+.scard .vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 0.5s ease,transform 0.5s ease;}
+.scard .vid.v-hidden{opacity:0;transform:scale(1.05);z-index:1;}
+.scard .vid.v-active{opacity:1;transform:scale(1);z-index:2;}
+/* pill tags - Larger for better tap targets */
+.scard .pill{position:absolute;top:16px;padding:8px 16px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border-radius:24px;cursor:pointer;z-index:50;transition:all .3s cubic-bezier(0.4, 0, 0.2, 1);border:1px solid rgba(255,255,255,0.12);backdrop-filter:blur(8px);background:rgba(0,0,0,0.55);color:#aaa;box-shadow:0 4px 10px rgba(0,0,0,0.3);}
+.scard .pill.p-left{left:16px;}
+.scard .pill.p-right{right:16px;}
+.scard .pill.p-on{background:var(--accent);color:#000;border-color:var(--accent);}
+/* nav dots */
+.stack-dots{display:flex;justify-content:center;gap:6px;margin-top:16px;position:relative;z-index:11;}
+.stack-dots{display:flex;justify-content:center;gap:6px;margin-top:16px;position:relative;z-index:11;}
+.sdot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.18);transition:all .3s;cursor:pointer;}
+.sdot.active{width:20px;border-radius:3px;background:var(--accent);}
+/* nav arrows */
+.stack-nav{display:flex;justify-content:center;gap:12px;margin-top:12px;}
+.snav-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:16px;transition:all .2s;}
+.snav-btn:hover{background:var(--accent);color:#000;border-color:var(--accent);}
+
+.hero-right{flex:1;width:100%;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:fadeUp .7s ease both;}
+
+/* ONBOARDING GUIDE */
+@keyframes guideIn{from{opacity:0;transform:translate(-50%, -40%);}to{opacity:1;transform:translate(-50%, -50%);}}
+@keyframes guideOut{from{opacity:1;transform:translate(-50%, -50%);}to{opacity:0;transform:translate(-50%, -40%);}}
+@keyframes pillPulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(180,255,0,0);}50%{transform:scale(1.15);box-shadow:0 0 24px 8px rgba(180,255,0,0.6);border-color:var(--accent);color:#fff;}}
+@keyframes stackGlowPulse{0%,100%{box-shadow:0 0 40px 6px rgba(180,255,0,0.22),0 0 80px 12px rgba(180,255,0,0.08);}50%{box-shadow:0 0 60px 12px rgba(180,255,0,0.5),0 0 100px 20px rgba(180,255,0,0.2);}}
+.stack-guide{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;background:rgba(10,10,10,0.85);color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;letter-spacing:.04em;border:1px solid rgba(180,255,0,0.4);backdrop-filter:blur(10px);pointer-events:none;z-index:40;animation:guideIn 0.5s ease both;box-shadow:0 8px 32px rgba(0,0,0,0.6);}
+.guide-blur { filter: blur(4px) brightness(0.5) !important; transform: scale(1.05) !important; transition: all 0.5s ease; }
+.stack-guide span{color:var(--accent);font-weight:700;}
+.stack-guide.guide-out{animation:guideOut 0.5s ease forwards;}
+.guide-active-glow{animation:stackGlowPulse 1.5s ease-in-out 3;}
+.pill-pulse{animation:pillPulse 1s ease-in-out 4;}
+
+/* ====== BELOW HERO â€” kept from original ====== */
+.section-head{padding:48px 6vw 18px;}
+.section-label{font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#8e8e8e;margin-bottom:8px;}
+.section-title{font-family:'Syne',sans-serif;font-size:34px;font-weight:800;letter-spacing:-1px;color:#f8f8f8;}
+.section-title .accent{color:#9ae600;}
+.grid{padding:0 6vw;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;}
+.card{background:rgba(10,10,10,0.95);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,0.18);transition:transform .25s ease,box-shadow .25s ease;}
+.card:hover{transform:translateY(-4px);box-shadow:0 26px 80px rgba(0,0,0,0.24);}
+.card-header{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
+.icon-box{width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.icon-box svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
+.card-title{font-size:18px;font-weight:700;color:#fff;font-family:'Syne',sans-serif;}
+.card-desc{font-size:14px;color:#d4d4d4;line-height:1.75;margin-bottom:16px;font-family:'DM Sans',sans-serif;}
+.feature-list{list-style:none;padding:0;margin:0 0 18px;display:flex;flex-direction:column;gap:10px;}
+.feature-list li{font-size:13px;color:#ccc;display:flex;align-items:flex-start;gap:10px;line-height:1.7;font-family:'DM Sans',sans-serif;}
+.feature-list li svg{width:14px;height:14px;stroke:#9ae600;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;margin-top:3px;}
+.typewrite{display:inline-block;width:100%;white-space:pre-wrap;overflow:hidden;vertical-align:top;font-family:'DM Sans',sans-serif;}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;}
+.tag{font-size:12px;font-family:'DM Sans',sans-serif;border:1px solid rgba(255,255,255,0.08);border-radius:999px;padding:6px 12px;color:#bbb;background:rgba(255,255,255,0.03);}
+.price{font-size:15px;font-weight:700;color:#9ae600;font-family:'DM Sans',sans-serif;}
+.price-note{font-size:12px;color:#7a7a7a;margin-top:4px;font-family:'DM Sans',sans-serif;}
+.delivery-card{background:rgba(10,10,10,0.95);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:28px;grid-column:1 / -1;box-shadow:0 20px 60px rgba(0,0,0,0.18);}
+.delivery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:18px;}
+.d-item{display:flex;align-items:flex-start;gap:12px;}
+.d-icon{width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.d-icon svg{width:18px;height:18px;stroke:#9ae600;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
+.d-label{font-size:14px;font-weight:700;color:#fff;font-family:'Syne',sans-serif;}
+.d-sub{font-size:12.5px;color:#8e8e8e;line-height:1.6;margin-top:4px;font-family:'DM Sans',sans-serif;}
+.d-meta{font-size:12px;color:#7a7a7a;margin-top:4px;font-family:'DM Sans',sans-serif;}
+
+.process{padding:0 6vw; position:relative;}
+.process-step{display:flex;gap:24px;padding:32px 0;border-bottom:1px solid var(--border);position:relative;transition:all 0.3s ease;}
+.process-step:last-child{border-bottom:none;}
+.process-step::before{content:'';position:absolute;left:18px;top:70px;bottom:0;width:1px;background:linear-gradient(to bottom, var(--border), transparent);z-index:0;}
+.process-step:last-child::before{display:none;}
+.step-num{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:rgba(255,255,255,0.1);line-height:1;min-width:40px;padding-top:2px;z-index:1;transition:all 0.3s ease;text-shadow: 0 0 20px rgba(180,255,0,0.05);}
+.process-step:hover .step-num, .process-step.active .step-num{color:var(--accent);text-shadow: 0 0 20px rgba(180,255,0,0.3);}
+.step-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;margin-bottom:6px;color:var(--text);transition:color 0.3s ease;}
+.process-step:hover .step-title, .process-step.active .step-title{color:var(--accent);}
+.step-desc{font-size:14px;color:var(--muted);line-height:1.6;max-width:500px;}
+@media(max-width:600px){
+  .process-step{gap:16px;padding:24px 0;}
+  .step-num{font-size:24px;min-width:30px;}
+  .process-step::before{left:15px;top:55px;}
+}
+.proof-section{padding:0 6vw 20px;text-align:center;}
+.proof-card-single{margin-top:10px;max-width:540px;margin-inline:auto;padding:36px;border-radius:16px;background:var(--surface);border:1px solid var(--border);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 4px 20px rgba(0,0,0,0.2);transition:all .3s ease;}
+.proof-card-single:hover{border-color:rgba(180,255,0,0.3);transform:translateY(-4px);box-shadow:0 8px 30px rgba(180,255,0,0.08);}
+.insta-icon{font-size:36px;margin-bottom:16px;}
+.proof-desc{font-size:15px;color:var(--text);line-height:1.7;margin-bottom:24px;font-family:'DM Sans',sans-serif;font-weight:400;letter-spacing:0.3px;}
+.insta-btn-main{display:inline-block;padding:14px 28px;background:#fff;color:#111;border-radius:8px;text-decoration:none;font-family:'Syne',sans-serif;font-weight:700;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,0.12);transition:transform .15s,box-shadow .2s,background .25s,color .25s;}
+.insta-btn-main:hover{transform:translateY(-2px);background:linear-gradient(135deg, #FCAF45 0%, #F77737 50%, #E4405F 100%);color:#fff;box-shadow:0 12px 32px rgba(228, 64, 95, 0.24);}
+.bottom-cta{margin:40px 6vw 64px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:36px 32px;text-align:center;position:relative;overflow:hidden;max-width:560px;}
+.bottom-cta::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:220px;height:220px;background:radial-gradient(circle,rgba(180,255,0,0.07) 0%,transparent 70%);pointer-events:none;}
+.bottom-cta h2{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;margin-bottom:8px;letter-spacing:-.5px;}
+.bottom-cta p{font-size:13px;color:var(--muted);margin-bottom:24px;}
+.wa-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#25D366;color:#000;border:none;padding:15px 24px;border-radius:6px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;text-decoration:none;width:100%;cursor:pointer;transition:transform .15s,filter .15s;}
+.wa-btn:hover{filter:brightness(1.1);}
+.insta-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#111;border:1px solid rgba(0,0,0,0.08);padding:13px 24px;border-radius:8px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;text-decoration:none;width:100%;margin-top:10px;transition:background .25s,color .25s,box-shadow .25s,transform .15s;}
+.insta-btn:hover{background:linear-gradient(135deg, #FCAF45 0%, #F77737 50%, #E4405F 100%);color:#fff;border-color:transparent;box-shadow:0 18px 28px rgba(228, 64, 95, 0.18);transform:translateY(-1px);}
+.insta-btn:active{background:linear-gradient(135deg, #E4405F 0%, #F77737 50%, #FCAF45 100%);}
+.insta-btn-icon{width:20px;height:20px;object-fit:contain;}
+.insta-btn-fallback{color:#E4405F;display:inline-block;}
+
+/* --- MOTION SYSTEM CSS --- */
+:root {
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+  --glow-color: rgba(180, 255, 0, 0.15);
+}
+
+/* Background Animated Glow */
+body::before {
+  content: '';
+  position: fixed;
+  top: -10%; left: -10%;
+  width: 120%; height: 120%;
+  background: radial-gradient(circle at 50% 50%, rgba(180,255,0,0.03) 0%, transparent 60%);
+  z-index: -1;
+  animation: bgMove 20s infinite alternate ease-in-out;
+  pointer-events: none;
+}
+@keyframes bgMove {
+  0% { transform: translate(0,0) scale(1); }
+  100% { transform: translate(5%, 5%) scale(1.1); }
+}
+
+/* Global Reveal Classes */
+.reveal-hide {
+  opacity: 0;
+  transform: translateY(40px) scale(0.98);
+  filter: blur(10px);
+  transition: all 1.2s var(--ease-premium);
+}
+.reveal-show {
+  opacity: 1 !important;
+  transform: translateY(0) scale(1) !important;
+  filter: blur(0) !important;
+}
+
+/* Magnetic Button Wrapper */
+.magnetic-wrap { display: inline-block; }
+
+/* 3D Tilt Card Base */
+.scard { 
+  transition: transform 0.1s ease-out; 
+  transform-style: preserve-3d;
+}
+
+/* Glow Pulse */
+.phone-glow-pulse {
+  animation: glowPulse 3s infinite alternate ease-in-out;
+}
+@keyframes glowPulse {
+  0% { box-shadow: 0 0 40px 0 var(--glow-color); }
+  100% { box-shadow: 0 0 80px 10px var(--glow-color); }
+}
+
+/* Text Reveal Animation */
+.hero-h1 span { display: inline-block; }
+.hero-h1, .hero-sub, .hero-tag, .cta-row { opacity: 0; transform: translateY(20px); transition: all 0.8s var(--ease-premium); }
+.hero-ready .hero-h1, .hero-ready .hero-sub, .hero-ready .hero-tag, .hero-ready .cta-row { opacity: 1; transform: translateY(0); }
+.hero-ready .hero-h1 { transition-delay: 0.1s; }
+.hero-ready .hero-sub { transition-delay: 0.2s; }
+.hero-ready .cta-row { transition-delay: 0.3s; }
+
+/* Staggered entry for any grid */
+.stagger-item { opacity: 0; transform: translateY(30px); transition: all 0.8s var(--ease-premium); }
+.stagger-item.reveal-show { opacity: 1; transform: translateY(0); }
+
+/* RESPONSIVE */
+@media(min-width:1024px){
+  .phone-frame{max-width:320px;}
+}
+@media(min-width:1280px){
+  .phone-frame{max-width:340px;}
+}
+@media(max-width:900px){
+  .hero-wrap{flex-direction:column;padding:48px 5vw;gap:40px;min-height:auto;}
+  .hero-right{flex-direction:row;justify-content:center;align-items:center;}
+  .phone-frame{max-width:280px;}
+  .phone-glow{border-radius:34px;}
+}
+@media(max-width:768px){
+  .hero-right{flex-direction:column;align-items:center;gap:0;}
+}
+@media(max-width:600px){
+  .hero-wrap{padding:32px 5vw 24px;gap:20px;}
+  .hero-h1{font-size:clamp(34px,10vw,48px);letter-spacing:-1px;}
+  .hero-sub{font-size:13.5px;}
+  .cta-row{flex-direction:column;gap:10px;}
+  .btn-primary,.btn-secondary{width:100%;justify-content:center;text-align:center;}
+  .stats-row{flex-wrap:wrap;gap:2px;}
+  .stat{min-width:90px;padding:12px 10px;}
+  .stat-num{font-size:18px;}
+  .services{grid-template-columns:1fr;padding:0 4vw;gap:12px;}
+  .service-card{padding:18px 16px;}
+  .section-head{padding:32px 4vw 12px;}
+  .section-title{font-size:22px;}
+  .stack-wrap{max-width:240px;}
+  .bottom-cta{margin:24px 4vw 48px;padding:24px 18px;}
+  .bottom-cta h2{font-size:20px;}
+  .proof-card-single{padding:24px 18px;}
+  .hero-badges{gap:5px;}
+  .badge{font-size:10.5px;padding:4px 9px;}
+  .marquee-wrap{margin:20px 0;}
+  .process{padding:0 4vw;}
+}
+/* SKELETON LOADER */
+#skeletonLoader { position: fixed; inset: 0; background: #0b0b0b; z-index: 9999; transition: opacity 0.6s ease, visibility 0.6s ease; overflow: hidden; pointer-events: none;}
+#skeletonLoader.hidden { opacity: 0; visibility: hidden; }
+.shimmer { background: #1a1a1a; background-image: linear-gradient(90deg, #1a1a1a 0px, #2a2a2a 60px, #1a1a1a 120px); background-size: 600px 100%; animation: shimmer 1.5s infinite linear; }
+@keyframes shimmer { 0% { background-position: -300px 0; } 100% { background-position: 300px 0; } }
+.skel-tag { width: 130px; height: 22px; border-radius: 4px; margin-bottom: 24px; }
+.skel-h1 { width: 85%; height: 60px; border-radius: 8px; margin-bottom: 12px; }
+.skel-h1-short { width: 60%; }
+.skel-p { width: 95%; height: 16px; border-radius: 4px; margin-bottom: 10px; margin-top:20px; }
+.skel-p-short { width: 70%; margin-bottom: 30px; margin-top:0; }
+.skel-badges { display: flex; gap: 8px; margin-bottom: 40px; flex-wrap: wrap; }
+.skel-badge { width: 90px; height: 28px; border-radius: 4px; }
+.skel-btns { display: flex; gap: 16px; margin-bottom: 40px; }
+.skel-btn { width: 140px; height: 48px; border-radius: 6px; }
+.skel-btn-sec { width: 110px; }
+.skel-stats { display: flex; gap: 32px; }
+.skel-stat-n { width: 50px; height: 28px; border-radius: 4px; margin-bottom: 8px; }
+.skel-stat-l { width: 80px; height: 14px; border-radius: 4px; }
+.skel-phone { width: 100%; max-width: 300px; aspect-ratio: 9/16; border-radius: 28px; box-shadow: 0 0 80px rgba(180,255,0,0.1); border: 3px solid #1e1e1e; }
+@media(min-width:1024px){ .skel-phone{max-width:320px;} }
+@media(min-width:1280px){ .skel-phone{max-width:340px;} }
+@media(max-width:900px){ .skel-phone{max-width:300px;} }
+@media(max-width:768px){ .skel-phone{max-width:285px;} }
+
+/* PREMIUM TRANSITION STYLES */
+.hero-wrap { transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.4s ease, filter 1.4s ease; transform-origin: center top; }
+.hero-exit { transform: scale(0.9) translateY(-100px); opacity: 0.1; filter: blur(12px); pointer-events: none; }
+
+.section-head, .services > * { 
+  opacity: 0; 
+  transform: translateY(120px) scale(0.92); 
+  filter: blur(15px);
+  transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-active { opacity: 1 !important; transform: translateY(0) scale(1) !important; filter: blur(0) !important; }
+
+/* Staggered delays for services - Longer for more "feel" */
+.services > *:nth-child(1) { transition-delay: 0.2s; }
+.services > *:nth-child(2) { transition-delay: 0.4s; }
+.services > *:nth-child(3) { transition-delay: 0.6s; }
+.services > *:nth-child(4) { transition-delay: 0.8s; }
+.services > *:nth-child(5) { transition-delay: 1.0s; }
+.services > *:nth-child(6) { transition-delay: 1.2s; }
+
+</style>
+</head>
+<body>
+
+<!-- SKELETON LOADER OVERLAY -->
+<div id="skeletonLoader">
+  <div class="hero-wrap">
+    <div class="hero-left">
+      <div class="skel-tag shimmer"></div>
+      <div class="skel-h1 shimmer"></div>
+      <div class="skel-h1 skel-h1-short shimmer"></div>
+      <div class="skel-p shimmer"></div>
+      <div class="skel-p skel-p-short shimmer"></div>
+      <div class="skel-badges">
+        <div class="skel-badge shimmer"></div><div class="skel-badge shimmer"></div><div class="skel-badge shimmer"></div>
+        <div class="skel-badge shimmer"></div><div class="skel-badge shimmer"></div><div class="skel-badge shimmer"></div>
+      </div>
+      <div class="skel-btns">
+        <div class="skel-btn shimmer"></div><div class="skel-btn skel-btn-sec shimmer"></div>
+      </div>
+      <div class="skel-stats">
+        <div><div class="skel-stat-n shimmer"></div><div class="skel-stat-l shimmer"></div></div>
+        <div><div class="skel-stat-n shimmer"></div><div class="skel-stat-l shimmer"></div></div>
+        <div><div class="skel-stat-n shimmer"></div><div class="skel-stat-l shimmer"></div></div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="phone-outer">
+        <div class="skel-phone shimmer"></div>
+      </div>
+    </div>
+  </div>
+</div><!-- HERO -->
+<section class="hero-wrap">
+
+  <!-- LEFT -->
+  <div class="hero-left">
+    <div class="hero-tag">Available for work ✦</div>
+    <h1 class="hero-h1">Shivam<span>Creates.</span></h1>
+    <p class="hero-sub">Video Editor &amp; AI Tools Expert — turning raw footage into scroll-stopping content</p>
+    <div class="hero-badges">
+      <span class="badge hot">⚡ AI Video</span>
+      <span class="badge hot">⚡ Reels Edit</span>
+      <span class="badge">After Effects</span>
+      <span class="badge">Hindi / English</span>
+    </div>
+    <div class="cta-row">
+      <a class="btn-primary" href="https://wa.me/9199495542?text=Hi%20Shivam%2C%20I%20saw%20your%20portfolio%20and%20really%20liked%20your%20work.%20I%20want%20to%20discuss%20a%20project%20and%20pricing." target="_blank">💬 Let's Talk</a>
+      <a class="btn-secondary" href="#services" id="workBtn">Work ↓</a>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><span class="stat-num">50+</span><span class="stat-label">Videos edited</span></div>
+      <div class="stat"><span class="stat-num">3 days</span><span class="stat-label">Avg delivery</span></div>
+      <div class="stat"><span class="stat-num">100%</span><span class="stat-label">Revision done</span></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Stacked Swipe Cards -->
+  <div class="hero-right">
+    <div class="stack-wrap" id="stackWrap">
+      <div class="stack-glow" id="stackGlow"></div>
+      
+      <!-- First-visit guide tooltip (centered over cards) -->
+      <div class="stack-guide" id="stackGuide" style="display:none">
+        ✦ Tap <span>Before / After</span> to see
+      </div>
+
+      <!-- CARD 1 -->
+      <div class="scard" data-pos="0" data-idx="0">
+        <video class="vid v-active" src="https://res.cloudinary.com/dpdv9jqav/video/upload/f_auto,q_auto/v1780676840/portfolio_videos/before/reel1.mp4" loop muted playsinline controls controlsList="nodownload" oncontextmenu="return false;"></video>
+        <video class="vid v-hidden" src="https://res.cloudinary.com/dpdv9jqav/video/upload/f_auto,q_auto/v1780675921/portfolio_videos/after/reel1.mp4" loop muted playsinline controls controlsList="nodownload" oncontextmenu="return false;"></video>
+        <div class="pill p-left p-on">Before</div>
+        <div class="pill p-right">After</div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="scard" data-pos="1" data-idx="1">
+        <video class="vid v-active" src="https://res.cloudinary.com/dpdv9jqav/video/upload/f_auto,q_auto/v1780675930/portfolio_videos/before/reel2.mp4" loop muted playsinline controls controlsList="nodownload" oncontextmenu="return false;"></video>
+        <video class="vid v-hidden" src="https://res.cloudinary.com/dpdv9jqav/video/upload/f_auto,q_auto/v1780676100/portfolio_videos/after/reel2.mp4" loop muted playsinline controls controlsList="nodownload" oncontextmenu="return false;"></video>
+        <div class="pill p-left p-on">Before</div>
+        <div class="pill p-right">After</div>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="scard" data-pos="2" data-idx="2">
+        <video class="vid v-active" src="https://res.cloudinary.com/dpdv9jqav/video/upload/f_auto,q_auto/v1780676111/portfolio_videos/before/reel3.mp4" loop muted playsinline controls controlsList="nodownload" oncontextmenu="return false;"></video>
+        <video class="vid v-hidden" src="https://res.cloudinary.com/dpdv9jqav/video/upload/f_auto,q_auto/v1780676119/portfolio_videos/after/reel3.mp4" loop muted playsinline controls controlsList="nodownload" oncontextmenu="return false;"></video>
+        <div class="pill p-left p-on">Before</div>
+        <div class="pill p-right">After</div>
+      </div>
+
+      <!-- CARD 4 -->
+      <div class="scard" data-pos="3" data-idx="3">
+        <video class="vid v-active" src="https://res.cloudinary.com/dpdv9jqav/video/upload/f_auto,q_auto/v1780676126/portfolio_videos/before/reel4.mp4" loop muted playsinline controls controlsList="nodownload" oncontextmenu="return false;"></video>
+        <video class="vid v-hidden" src="https://res.cloudinary.com/dpdv9jqav/video/upload/f_auto,q_auto/v1780676139/portfolio_videos/after/reel4.mp4" loop muted playsinline controls controlsList="nodownload" oncontextmenu="return false;"></video>
+        <div class="pill p-left p-on">Before</div>
+        <div class="pill p-right">After</div>
+      </div>
+
+      <!-- CARD 5 -->
+      <div class="scard" data-pos="-1" data-idx="4">
+        <video class="vid v-active" src="https://res.cloudinary.com/dpdv9jqav/video/upload/f_auto,q_auto/v1780676149/portfolio_videos/before/reel5.mp4" loop muted playsinline controls controlsList="nodownload" oncontextmenu="return false;"></video>
+        <video class="vid v-hidden" src="https://res.cloudinary.com/dpdv9jqav/video/upload/f_auto,q_auto/v1780676156/portfolio_videos/after/reel5.mp4" loop muted playsinline controls controlsList="nodownload" oncontextmenu="return false;"></video>
+        <div class="pill p-left p-on">Before</div>
+        <div class="pill p-right">After</div>
+      </div>
+
+      <!-- CARD 6 -->
+      <div class="scard" data-pos="-1" data-idx="5">
+        <video class="vid v-active" src="https://res.cloudinary.com/dpdv9jqav/video/upload/f_auto,q_auto/v1780676161/portfolio_videos/before/reel6.mp4" loop muted playsinline controls controlsList="nodownload" oncontextmenu="return false;"></video>
+        <video class="vid v-hidden" src="https://res.cloudinary.com/dpdv9jqav/video/upload/f_auto,q_auto/v1780676168/portfolio_videos/after/reel6.mp4" loop muted playsinline controls controlsList="nodownload" oncontextmenu="return false;"></video>
+        <div class="pill p-left p-on">Before</div>
+        <div class="pill p-right">After</div>
+      </div>
+    </div>
+
+    <!-- Dots + Nav -->
+    <div class="stack-dots" id="stackDots">
+      <div class="sdot active" data-i="0"></div>
+      <div class="sdot" data-i="1"></div>
+      <div class="sdot" data-i="2"></div>
+      <div class="sdot" data-i="3"></div>
+      <div class="sdot" data-i="4"></div>
+      <div class="sdot" data-i="5"></div>
+    </div>
+    <div class="stack-nav">
+      <div class="snav-btn" id="prevBtn">←</div>
+      <div class="snav-btn" id="nextBtn">→</div>
+    </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- SERVICES -->
+<div class="section-head" id="services">
+  <div class="section-label">WHAT I DO</div>
+  <div class="section-title">Services <span class="accent">I offer</span></div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <div class="card-header">
+      <div class="icon-box">
+        <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.5"/></svg>
+      </div>
+      <div class="card-title typewrite" data-text="Reels &amp; Short Video Editing"></div>
+    </div>
+    <div class="card-desc typewrite" data-text="Instagram reels &amp; YouTube Shorts built to stop the scroll — every cut, transition, and beat drop intentional."></div>
+    <ul class="feature-list">
+      <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span class="typewrite" data-text="Scroll-stop cuts &amp; beat-synced transitions"></span></li>
+      <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span class="typewrite" data-text="Motion graphics matched to your brand colors"></span></li>
+      <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span class="typewrite" data-text="Styled captions, color grade &amp; music sync"></span></li>
+      <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span class="typewrite" data-text="AI stock clips &amp; visuals used for better results"></span></li>
+    </ul>
+    <div class="tags">
+      <span class="tag">After Effects</span>
+      <span class="tag">Motion Graphics</span>
+      <span class="tag">Color Grade</span>
+      <span class="tag">Captions</span>
+      <span class="tag">Music Sync</span>
+    </div>
+    <div class="price">Starting ₹500 / reel</div>
+    <div class="price-note">Final price depends on complexity &amp; visual demand</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="icon-box">
+        <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </div>
+      <div class="card-title typewrite" data-text="YouTube Video Editing"></div>
+    </div>
+    <div class="card-desc typewrite" data-text="Long-form edits that keep viewers watching — structured, engaging, and export-ready for growth."></div>
+    <ul class="feature-list">
+      <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span class="typewrite" data-text="Cinematic intros &amp; scroll-stop hooks"></span></li>
+      <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span class="typewrite" data-text="Chapters, pacing &amp; retention-focused cuts"></span></li>
+      <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span class="typewrite" data-text="Motion graphics &amp; animated overlays"></span></li>
+      <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span class="typewrite" data-text="AI stock clips integrated mid-video — no raw footage needed"></span></li>
+      <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span class="typewrite" data-text="Faceless channel-ready edits with a strong hook and clean brand polish."></span></li>
+    </ul>
+    <div class="tags">
+      <span class="tag">After Effects</span>
+      <span class="tag">Motion Graphics</span>
+      <span class="tag">AI Stock Clips</span>
+      <span class="tag">Chapters</span>
+      <span class="tag">Thumbnail Export</span>
+    </div>
+    <div class="price">Starting ₹1500 / video</div>
+    <div class="price-note">Final price depends on video length &amp; edit complexity</div>
+  </div>
+
+  <div class="delivery-card">
+    <div class="card-header" style="margin-bottom:6px;">
+      <div class="icon-box">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div>
+        <div class="card-title typewrite" data-text="Delivery &amp; Pricing"></div>
+        <div style="font-size:12px;color:#8e8e8e;margin-top:4px;"><span class="typewrite" data-text="Transparent timelines. No hidden charges."></span></div>
+      </div>
+    </div>
+    <div class="delivery-grid">
+      <div class="d-item">
+        <div class="d-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 16 11 18 15 14"/></svg>
+        </div>
+        <div>
+          <div class="d-label typewrite" data-text="Delivery within 3 days"></div>
+          <div class="d-sub typewrite" data-text="Timeline depends on video type, length &amp; revision rounds"></div>
+        </div>
+      </div>
+      <div class="d-item">
+        <div class="d-icon">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div>
+          <div class="d-label typewrite" data-text="Pricing starts at ₹500"></div>
+          <div class="d-sub typewrite" data-text="Scales up based on visual complexity, motion graphics &amp; your requirements"></div>
+        </div>
+      </div>
+      <div class="d-item">
+        <div class="d-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div>
+          <div class="d-label typewrite" data-text="Custom quote available"></div>
+          <div class="d-sub typewrite" data-text="DM with your brief — I'll give an exact price &amp; timeline before we start"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="section-head">
+  <div class="section-label">Process</div>
+  <div class="section-title">How it <span>works</span></div>
+</div>
+
+<div class="process">
+  <div class="process-step">
+    <div class="step-num">01</div>
+    <div class="step-content">
+      <div class="step-title">Message me on WhatsApp</div>
+      <div class="step-desc">Tell me what you need, your deadline, and budget. No formalities, just a quick chat.</div>
+    </div>
+  </div>
+  <div class="process-step">
+    <div class="step-num">02</div>
+    <div class="step-content">
+      <div class="step-title">Share your footage</div>
+      <div class="step-desc">Send via Google Drive or WeTransfer. For AI videos, just a brief description is enough.</div>
+    </div>
+  </div>
+  <div class="process-step">
+    <div class="step-num">03</div>
+    <div class="step-content">
+      <div class="step-title">Edit + Review</div>
+      <div class="step-desc">Draft ready in 24–72 hours. Free revisions until you're completely satisfied.</div>
+    </div>
+  </div>
+  <div class="process-step">
+    <div class="step-num">04</div>
+    <div class="step-content">
+      <div class="step-title">Final delivery + payment</div>
+      <div class="step-desc">Receive your files and pay via UPI. Long-term clients get special discounts.</div>
+    </div>
+  </div>
+</div>
+
+<!-- INSTAGRAM PROOF -->
+<div class="section-head">
+  <div class="section-label">Real results speak louder than words</div>
+  <div class="section-title">See my work <span>in action</span></div>
+</div>
+
+<section class="proof-section">
+  <div class="proof-card-single">
+    <div class="insta-icon">
+      <img src="./public/instagram/instagram.png" alt="Instagram" style="width:36px;height:36px;object-fit:contain;" id="proofInstaIcon" onerror="this.style.display='none';document.getElementById('proofInstaSvg').style.display='inline-block';">
+      <svg id="proofInstaSvg" width="36" height="36" viewBox="0 0 24 24" fill="url(#instagram-gradient)" style="display:none;">
+        <defs>
+          <radialGradient id="instagram-gradient" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0%" style="stop-color:#FCAF45"/>
+            <stop offset="50%" style="stop-color:#F77737"/>
+            <stop offset="100%" style="stop-color:#E4405F"/>
+          </radialGradient>
+        </defs>
+        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+      </svg>
+    </div>
+    <p class="proof-desc">
+      You can check my editing work directly on Instagram — from reels to full transformations.<br><br>See the quality. See the difference. No fake reviews. Just pure work.
+    </p>
+    <a href="https://instagram.com/rewire_sync" target="_blank" class="insta-btn-main">
+      View on Instagram
+    </a>
+  </div>
+</section>
+
+<!-- BOTTOM CTA -->
+<div class="bottom-cta">
+  <h2>Ready to work together?</h2>
+  <p>Message me now — you'll get a quote within 1 hour.</p>
+  <a class="wa-btn" href="https://wa.me/9199495542?text=Hi%20Shivam%2C%20I%20saw%20your%20portfolio%20and%20really%20liked%20your%20work.%20I%20want%20to%20discuss%20a%20project%20and%20pricing." target="_blank">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Message me on WhatsApp
+  </a>
+  <a class="insta-btn" href="https://instagram.com/rewire_sync" target="_blank">
+    <img src="./public/instagram/instagram.png" alt="Instagram" class="insta-btn-icon" id="instaIcon" onerror="this.style.display='none';document.getElementById('instaSvgFallback').style.display='inline-block';">
+    <svg class="insta-btn-icon insta-btn-fallback" id="instaSvgFallback" viewBox="0 0 24 24" fill="currentColor" style="display:none;">
+      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+    </svg>
+    Follow on Instagram
+  </a>
+</div>
+
+<script>
+// ---- STACKED SWIPE CARD SYSTEM (Real Drag Physics) ----
+const cards = Array.from(document.querySelectorAll('.scard'));
+const dots  = Array.from(document.querySelectorAll('.sdot'));
+const stackWrap = document.getElementById('stackWrap');
+const TOTAL = cards.length;
+const THROW_THRESHOLD = 80;   // px to trigger a swipe
+const THROW_VEL = 0.4;         // px/ms velocity threshold
+let active = 0;
+let globalMuted = true;
+
+// Better global mute sync
+function syncMuteState(v) {
+  if (v.closest('.scard').dataset.pos === "0") {
+    globalMuted = v.muted;
+  }
+}
+
+document.querySelectorAll('video.vid').forEach(v => {
+  v.addEventListener('volumechange', () => syncMuteState(v));
+});
+
+function getPos(idx) {
+  let diff = (idx - active + TOTAL) % TOTAL;
+  if (diff >= 4) diff = -1;
+  return diff;
+}
+
+// render() defined below with advance() to support skipReset param
+
+// Auto-pause video when scrolling away
+const scrollObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      render(); // Resume active video
+    } else {
+      // Pause all videos when hero is out of view
+      document.querySelectorAll('video.vid').forEach(v => v.pause());
+    }
+  });
+}, { threshold: 0.5 }); // Pause as soon as 50% of the video is out of view
+
+scrollObserver.observe(stackWrap);
+
+// --- PREMIUM WORK TRANSITION ---
+const workBtn = document.getElementById('workBtn');
+const hero = document.querySelector('.hero-wrap');
+const serviceItems = [document.querySelector('.section-head'), ...document.querySelectorAll('.services > *')];
+
+workBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  
+  // 1. Hero Exit Animation (Start immediately)
+  hero.classList.add('hero-exit');
+  
+  // 2. Wait a bit so user sees the hero shrink/blur before moving
+  setTimeout(() => {
+    const target = document.querySelector('#services');
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    
+    // 3. Staggered Reveal starts after scroll begins
+    setTimeout(() => {
+      serviceItems.forEach(item => {
+        if(item) item.classList.add('reveal-active');
+      });
+    }, 400);
+  }, 250); // The "Cinematic Pause"
+});
+
+// Also reveal on normal scroll (Repeatable)
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('reveal-active');
+    } else {
+      entry.target.classList.remove('reveal-active');
+    }
+  });
+}, { threshold: 0.15 });
+
+serviceItems.forEach(item => {
+  if(item) revealObserver.observe(item);
+});
+
+// Reset Hero when scrolling back to top
+const heroObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      hero.classList.remove('hero-exit');
+    }
+  });
+}, { threshold: 0.5 });
+heroObserver.observe(hero);
+
+// --- NEW MOTION SYSTEM LOGIC ---
+
+// 1. Stats Counter Animation
+function animateCounter(el, target) {
+  let current = 0;
+  const duration = 2000;
+  const step = target / (duration / 16);
+  const timer = setInterval(() => {
+    current += step;
+    if (current >= target) {
+      el.textContent = target + (el.textContent.includes('+') ? '+' : (el.textContent.includes('days') ? ' days' : '%'));
+      el.style.transform = 'scale(1.2)';
+      setTimeout(() => el.style.transform = 'scale(1)', 200);
+      clearInterval(timer);
+    } else {
+      el.textContent = Math.floor(current) + (el.textContent.includes('+') ? '+' : (el.textContent.includes('days') ? ' days' : '%'));
+    }
+  }, 16);
+}
+
+const statsObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.querySelectorAll('.stat-num').forEach(num => {
+        const val = parseInt(num.textContent);
+        animateCounter(num, val);
+      });
+      statsObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+statsObserver.observe(document.querySelector('.stats-row'));
+
+// 2. Magnetic Button Effect
+// ... (magnetic button code is already there)
+
+// 3. Process Steps Auto-Highlight on Scroll (for Mobile)
+const processObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('active');
+    } else {
+      entry.target.classList.remove('active');
+    }
+  });
+}, { 
+  threshold: 0.8, 
+  rootMargin: "0px 0px -20% 0px"
+});
+
+document.querySelectorAll('.process-step').forEach(step => {
+  processObserver.observe(step);
+});
+
+
+
+// 5. 3D Card Tilt
+stackWrap.addEventListener('mousemove', (e) => {
+  const activeCard = cards.find(c => +c.dataset.pos === 0);
+  if (!activeCard) return;
+  const rect = activeCard.getBoundingClientRect();
+  const x = (e.clientX - rect.left) / rect.width - 0.5;
+  const y = (e.clientY - rect.top) / rect.height - 0.5;
+  activeCard.style.transform = `perspective(1000px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg) scale(1.02)`;
+});
+stackWrap.addEventListener('mouseleave', () => {
+  render(); // Reset transforms
+});
+
+// 4. Parallax Hero
+document.addEventListener('mousemove', (e) => {
+  const moveX = (e.clientX - window.innerWidth/2) * 0.01;
+  const moveY = (e.clientY - window.innerHeight/2) * 0.01;
+  hero.style.transform = `translate(${moveX}px, ${moveY}px)`;
+});
+
+// 5. Auto Demo (One-time)
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const activeCard = cards.find(c => +c.dataset.pos === 0);
+    if (!activeCard) return;
+    const btnAfter = activeCard.querySelector('.pill.p-right');
+    const btnBefore = activeCard.querySelector('.pill.p-left');
+    
+    // Switch to After
+    btnAfter.click();
+    setTimeout(() => {
+      // Switch back to Before
+      btnBefore.click();
+    }, 1500);
+  }, 3000);
+});
+
+// Trigger Hero Entrance
+setTimeout(() => document.body.classList.add('hero-ready'), 100);
+
+const SWIPE_DURATION = 420; // ms — shared by both directions
+const EXIT_EASE = 'cubic-bezier(0.4, 0, 0.6, 1)';
+const ENTER_EASE = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+
+function render(skipTransition = false, skipReset = []) {
+  cards.forEach((c, i) => {
+    if (c.classList.contains('is-dragging')) return;
+    if (skipTransition) c.classList.remove('snap-back');
+    else c.classList.add('snap-back');
+    const pos = getPos(i);
+    c.dataset.pos = pos;
+    if (!skipReset.includes(c)) {
+      c.style.cssText = ''; // clear all inline styles at once
+    }
+    const vids = c.querySelectorAll('.vid');
+    vids.forEach(v => {
+      const isActiveVisible = (pos === 0 && v.classList.contains('v-active'));
+      if (isActiveVisible) {
+        v.muted = globalMuted;
+        const p = v.play(); if (p) p.catch(() => { v.muted=true; globalMuted=true; v.play().catch(()=>{}); });
+      } else {
+        v.pause(); v.muted = true;
+        if (pos !== 0) v.currentTime = 0;
+      }
+    });
+  });
+  dots.forEach((d, i) => d.classList.toggle('active', i === active));
+}
+
+// Instant-set a card position with no transition
+function setInstant(card, transform, opacity, zIndex) {
+  card.classList.remove('snap-back');
+  card.style.transition = 'none';
+  card.style.transform  = transform;
+  card.style.opacity    = String(opacity);
+  card.style.zIndex     = String(zIndex);
+  card.offsetHeight; // force reflow so instant position registers
+}
+
+// Animate a card to target values
+function setAnimated(card, transform, opacity, duration, easing) {
+  card.style.transition = `transform ${duration}ms ${easing}, opacity ${duration * 0.9}ms ${easing}`;
+  card.style.transform  = transform;
+  card.style.opacity    = String(opacity);
+}
+
+// Release a card back to CSS-driven state (data-pos CSS rules)
+function releaseToCSS(card) {
+  card.classList.add('snap-back');
+  card.style.transition = '';
+  card.style.transform  = '';
+  card.style.opacity    = '';
+  card.style.filter     = '';
+  card.style.zIndex     = '';
+}
+
+function advance(dir) {
+  // dir:  1 = LEFT swipe (next card)   -1 = RIGHT swipe (prev card)
+  const outCard  = cards.find(c => +c.dataset.pos === 0);
+  const exitX    = dir === 1 ? -240 : 240;   // exit direction
+  const enterX   = dir === 1 ?  180 : -180;  // where incoming starts
+  const rot      = dir === 1 ?  -8  :  8;    // rotation on exit
+
+  // --- 1. INCOMING CARD: place instantly at entry position ---
+  const inIdx = dir === 1
+    ? (active + 1) % TOTAL
+    : (active - 1 + TOTAL) % TOTAL;
+  const inCard = cards[inIdx];
+  setInstant(inCard, `translate(${enterX}px, 20px) scale(0.88) rotate(${-rot}deg)`, 0, 11);
+
+  // --- 2. OUTGOING CARD: animate exit in swipe direction ---
+  if (outCard) {
+    outCard.classList.remove('snap-back');
+    setAnimated(outCard,
+      `translate(${exitX}px, 10px) scale(0.85) rotate(${rot}deg)`,
+      0, SWIPE_DURATION, EXIT_EASE);
+    outCard.style.zIndex = '5';
+  }
+
+  // --- 3. Update active, render stacked cards behind ---
+  active = (active + dir + TOTAL) % TOTAL;
+  render(false, [inCard, outCard]); // skip resetting the two animated cards
+
+  // --- 4. Animate incoming card to pos 0 (center) ---
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      releaseToCSS(inCard); // remove inline overrides → CSS [data-pos="0"] takes over with snap-back transition
+    });
+  });
+
+  // --- 5. Cleanup outCard after exit animation completes ---
+  setTimeout(() => {
+    if (outCard) {
+      outCard.style.transition = 'none';
+      render(true, []); // snap all cards to correct CSS positions (no transition)
+    }
+  }, SWIPE_DURATION + 60);
+}
+
+document.getElementById('nextBtn').addEventListener('click', () => advance(1));
+document.getElementById('prevBtn').addEventListener('click', () => advance(-1));
+dots.forEach(d => d.addEventListener('click', () => { active = +d.dataset.i; render(); }));
+
+// ---- REAL DRAG ON ACTIVE CARD ----
+let drag = { active: false, card: null, startX: 0, startY: 0, curX: 0, curY: 0, velX: 0, lastT: 0, lastX: 0, directionLocked: false, isHorizontal: false };
+
+function getActiveCard() { return cards.find(c => +c.dataset.pos === 0); }
+
+function onDragStart(x, y) {
+  const card = getActiveCard();
+  if (!card) return;
+  drag = { active: true, card, startX: x, startY: y, curX: x, curY: y, velX: 0, lastT: Date.now(), lastX: x, directionLocked: false, isHorizontal: false };
+  card.classList.add('is-dragging');
+  card.classList.remove('snap-back');
+  // Do NOT lock body overflow here — direction unknown yet
+}
+
+function onDragMove(x, y) {
+  if (!drag.active) return;
+  const now = Date.now();
+  const dt = Math.max(now - drag.lastT, 1);
+  drag.velX = (x - drag.lastX) / dt;
+  drag.lastX = x; drag.lastT = now;
+  drag.curX = x; drag.curY = y;
+
+  // Clamp dx so card never leaves its container area
+  const MAX_DRAG = 150;
+  const dx = Math.max(-MAX_DRAG, Math.min(MAX_DRAG, x - drag.startX));
+  const dy = y - drag.startY;
+
+  // Tilt: rotate up to ±12deg based on clamped drag
+  const rot = dx * 0.07;
+  // Minimal vertical follow (resistance feel)
+  const lift = Math.max(-30, Math.min(30, dy * 0.1));
+
+  drag.card.style.transform = `translate(${dx}px, ${lift}px) rotate(${rot}deg) scale(1.02)`;
+  drag.card.style.opacity   = Math.max(0.4, 1 - Math.abs(dx) / 300);
+}
+
+function onDragEnd() {
+  if (!drag.active) return;
+  drag.active = false;
+  const card = drag.card;
+  card.classList.remove('is-dragging');
+
+  const dx = drag.curX - drag.startX;
+  const vel = drag.velX;
+  const thrown = Math.abs(dx) > THROW_THRESHOLD || Math.abs(vel) > THROW_VEL;
+
+  if (thrown) {
+    // Clear drag position so advance() exit animation starts cleanly
+    card.style.transition = 'none';
+    card.style.transform  = '';
+    card.style.opacity    = '';
+    card.offsetHeight; // reflow
+    if (dx < 0) advance(1);
+    else         advance(-1);
+  } else {
+    // Spring back to original position
+    card.classList.add('snap-back');
+    card.style.transform = '';
+    card.style.opacity = '';
+    setTimeout(() => card.classList.remove('snap-back'), 400);
+  }
+  // Restore page scroll
+  document.body.style.overflow = '';
+}
+
+// Mouse events — with sticky-drag protection
+stackWrap.addEventListener('mousedown', e => { e.preventDefault(); onDragStart(e.clientX, e.clientY); });
+window.addEventListener('mousemove', e => {
+  // Self-cancel if mouse button was released outside the window
+  if (drag.active && e.buttons === 0) { onDragEnd(); return; }
+  onDragMove(e.clientX, e.clientY);
+});
+window.addEventListener('mouseup',    () => { onDragEnd(); });
+window.addEventListener('mouseleave', () => { onDragEnd(); }); // safety: cursor left window
+
+// Touch events
+stackWrap.addEventListener('touchstart', e => {
+  onDragStart(e.touches[0].clientX, e.touches[0].clientY);
+}, { passive: true });
+
+stackWrap.addEventListener('touchmove', e => {
+  if (!drag.active) return;
+
+  const tx = e.touches[0].clientX;
+  const ty = e.touches[0].clientY;
+
+  // Direction lock: decide horizontal vs vertical on first significant move
+  if (!drag.directionLocked) {
+    const dx = Math.abs(tx - drag.startX);
+    const dy = Math.abs(ty - drag.startY);
+    if (dx < 5 && dy < 5) return; // Not moved enough yet
+    drag.directionLocked = true;
+    drag.isHorizontal = dx >= dy; // true = horizontal swipe
+
+    if (!drag.isHorizontal) {
+      // User is scrolling vertically — cancel the drag entirely
+      drag.active = false;
+      drag.card.classList.remove('is-dragging');
+      drag.card.classList.add('snap-back');
+      drag.card.style.transform = '';
+      drag.card.style.opacity = '';
+      setTimeout(() => drag.card.classList.remove('snap-back'), 400);
+      return;
+    }
+    // Horizontal confirmed — prevent vertical scroll for this gesture
+    document.body.style.overflow = 'hidden';
+  }
+
+  if (drag.isHorizontal) {
+    e.preventDefault(); // Only block scroll for confirmed horizontal swipe
+    onDragMove(tx, ty);
+  }
+}, { passive: false });
+
+window.addEventListener('touchend', () => { onDragEnd(); });
+
+// Click on stacked (non-active) card → bring to front
+cards.forEach((c, i) => {
+  c.addEventListener('click', (e) => {
+    // If it was a drag (moved more than 5px), ignore click
+    if (Math.abs(drag.curX - drag.startX) > 5) return;
+    // Click on a background card — bring it to front
+    if (+c.dataset.pos !== 0) { active = i; render(); return; }
+
+    // Fullscreen toggle
+    if (e.target.closest('.fs-btn')) {
+      if (!document.fullscreenElement) {
+        c.requestFullscreen().catch(err => {
+          alert(`Error attempting to enable full-screen mode: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+      return;
+    }
+
+    // Before/After pill toggle on active card
+    const pill = e.target.closest('.pill');
+    if (!pill) return;
+    
+    const vids  = c.querySelectorAll('.vid');
+    const pills = c.querySelectorAll('.pill');
+    const isLeft = pill.classList.contains('p-left');
+    
+    // Identify current and next video
+    const currentVid = vids[0].classList.contains('v-active') ? vids[0] : vids[1];
+    const nextVid = isLeft ? vids[0] : vids[1];
+    
+    if (currentVid !== nextVid) {
+      // Sync timestamps and audio state
+      if (currentVid.readyState >= 1) {
+        nextVid.currentTime = currentVid.currentTime;
+      }
+      nextVid.muted = currentVid.muted;
+      
+      // Update classes
+      vids[0].classList.toggle('v-active', isLeft);  vids[0].classList.toggle('v-hidden', !isLeft);
+      vids[1].classList.toggle('v-active', !isLeft); vids[1].classList.toggle('v-hidden', isLeft);
+      pills[0].classList.toggle('p-on', isLeft);     pills[1].classList.toggle('p-on', !isLeft);
+      
+      // Play new, pause old
+      currentVid.pause();
+      nextVid.play().catch(e => {});
+    }
+  });
+});
+
+// ---- EVERY-VISIT ONBOARDING GUIDE ----
+window.addEventListener('load', () => {
+  const guide   = document.getElementById('stackGuide');
+  const glow    = document.getElementById('stackGlow');
+  const activeCard = cards.find(c => +c.dataset.pos === 0);
+
+  // Small delay so skeleton is gone first
+  setTimeout(() => {
+    // Show tooltip
+    guide.style.display = 'block';
+
+    // Pulse the glow ring
+    glow.classList.add('guide-active-glow');
+
+    // Pulse the pills on active card and blur the image
+    if (activeCard) {
+      activeCard.querySelectorAll('.pill').forEach(p => p.classList.add('pill-pulse'));
+      const activeImg = activeCard.querySelector('.v-active');
+      if (activeImg) activeImg.classList.add('guide-blur');
+    }
+
+    // Fade out after 5s
+    setTimeout(() => {
+      guide.classList.add('guide-out');
+      glow.classList.remove('guide-active-glow');
+      if (activeCard) {
+        activeCard.querySelectorAll('.pill').forEach(p => p.classList.remove('pill-pulse'));
+        const activeImg = activeCard.querySelector('.v-active');
+        if (activeImg) activeImg.classList.remove('guide-blur');
+      }
+      setTimeout(() => guide.remove(), 500);
+    }, 5000);
+
+  }, 900); // after skeleton fade
+});
+
+// ---- SKELETON LOADER LOGIC ----
+window.addEventListener('load', () => {
+  const loader = document.getElementById('skeletonLoader');
+  if (loader) {
+    setTimeout(() => {
+      loader.classList.add('hidden');
+      setTimeout(() => loader.remove(), 600);
+    }, 500);
+  }
+});
+
+// ---- CARD TYPEWRITER ANIMATION ----
+function typeWriter(el, text, delay = 0) {
+  el.textContent = '';
+  let index = 0;
+  setTimeout(() => {
+    const step = () => {
+      if (index <= text.length) {
+        el.textContent = text.slice(0, index);
+        index += 1;
+        setTimeout(step, 25 + Math.random() * 20);
+      }
+    };
+    step();
+  }, delay);
+}
+
+function startTypewriter() {
+  const items = Array.from(document.querySelectorAll('.typewrite'));
+  items.forEach((item, idx) => {
+    const text = item.dataset.text || '';
+    const delay = idx * 90 + 200;
+    typeWriter(item, text, delay);
+  });
+}
+
+const servicesSection = document.getElementById('services');
+if (servicesSection) {
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        startTypewriter();
+        obs.disconnect();
+      }
+    });
+  }, { threshold: 0.25 });
+  observer.observe(servicesSection);
+} else {
+  window.addEventListener('DOMContentLoaded', startTypewriter);
+}
+
+// Initialize first frame and video play
+render(true);
+</script>
+
+</body>
+</html>
