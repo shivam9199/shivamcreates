@@ -2971,10 +2971,42 @@ let supabaseClient = null;
 if (SUPABASE_URL && SUPABASE_ANON_KEY) {
   try {
     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    console.log('✅ Supabase client initialized successfully');
   } catch (err) {
     console.error("Supabase initialization error:", err);
   }
 }
+
+// Supabase connection test
+async function testSupabaseConnection() {
+  if (!supabaseClient) {
+    console.warn('Supabase client not initialized');
+    return { connected: false, reason: 'Client not initialized' };
+  }
+  
+  try {
+    const { data, error } = await supabaseClient.from('reviews').select('*').limit(1);
+    if (error) {
+      console.error('Supabase connection test failed:', error);
+      return { connected: false, reason: error.message, details: error };
+    }
+    console.log('✅ Supabase connection OK. Table accessible. Sample data:', data);
+    return { connected: true, data };
+  } catch (err) {
+    console.error('Supabase connection test exception:', err);
+    return { connected: false, reason: err.message, exception: true };
+  }
+}
+
+// Run connection test on page load
+runWhenReady(async () => {
+  const testResult = await testSupabaseConnection();
+  if (testResult.connected) {
+    console.log('✅ SUPABASE CONNECTED - Reviews table is readable');
+  } else {
+    console.error('❌ SUPABASE NOT WORKING:', testResult.reason, testResult.details);
+  }
+});
 
 // Default reviews to show if no database or local reviews exist
 const DEFAULT_REVIEWS = [
