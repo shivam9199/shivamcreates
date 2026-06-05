@@ -1546,18 +1546,7 @@ body::before {
     <!-- Left Column: Stylized Cinematic Cam Icon -->
     <div class="about-graphic-wrap">
       <div class="about-graphic-glow"></div>
-      <div class="about-graphic-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-          <defs>
-            <linearGradient id="orange-gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#ff4d00" />
-              <stop offset="100%" stop-color="#ffb700" />
-            </linearGradient>
-          </defs>
-          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" stroke="url(#orange-gold-grad)" />
-          <circle cx="12" cy="13" r="4" stroke="url(#orange-gold-grad)" />
-        </svg>
-      </div>
+      <img src="https://res.cloudinary.com/dpdv9jqav/image/upload/v1780686018/portfolio_images/shivam_avatar.png" alt="Shivam" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 18px; z-index: 1;">
       <div class="about-graphic-badge">FOUNDER</div>
     </div>
     
@@ -2329,8 +2318,8 @@ if (servicesSection) {
 render(true);
 
 // ---- REVIEWS & SUPABASE INTEGRATION ----
-const SUPABASE_URL = ""; // Fill this in when ready
-const SUPABASE_ANON_KEY = ""; // Fill this in when ready
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || ""; 
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || ""; 
 
 let supabaseClient = null;
 if (SUPABASE_URL && SUPABASE_ANON_KEY) {
