@@ -3008,30 +3008,8 @@ runWhenReady(async () => {
   }
 });
 
-// Default reviews to show if no database or local reviews exist
-const DEFAULT_REVIEWS = [
-  {
-    name: "Aman Sharma",
-    instagram: "@aman_edits",
-    rating: 5,
-    comment: "Amazing edits! Shivam understands retention and pacing better than anyone else. My Reels views went up by 3x after working with him.",
-    created_at: new Date(Date.now() - 86400000 * 3).toISOString()
-  },
-  {
-    name: "Rehan Khan",
-    instagram: "@rehan_fx",
-    rating: 5,
-    comment: "Fast delivery and perfect sound design. Revisions were done super quickly. Highly recommended for long-term projects!",
-    created_at: new Date(Date.now() - 86400000 * 5).toISOString()
-  },
-  {
-    name: "Sara Kapoor",
-    instagram: "@sara_vlogs",
-    rating: 5,
-    comment: "Working with Shivam was so smooth. The AI video elements he added were mindblowing. Definitely ordering again!",
-    created_at: new Date(Date.now() - 86400000 * 7).toISOString()
-  }
-];
+// Use only genuine reviews from Supabase or user local submissions.
+const DEFAULT_REVIEWS = [];
 
 // Load reviews
 async function loadReviews() {
@@ -3103,11 +3081,10 @@ function getLocalReviews() {
     if (stored) {
       return JSON.parse(stored);
     }
-    localStorage.setItem('shivam_creates_reviews', JSON.stringify(DEFAULT_REVIEWS));
   } catch (e) {
-    console.warn("localStorage is not accessible, using default reviews:", e);
+    console.warn("localStorage is not accessible, using empty review state:", e);
   }
-  return DEFAULT_REVIEWS;
+  return [];
 }
 
 function saveLocalReview(review) {
