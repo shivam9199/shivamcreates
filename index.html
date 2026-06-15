@@ -1565,6 +1565,22 @@ body::before {
   }
 }
 
+/* Lenis smooth scrolling rules */
+html.lenis, html.lenis body {
+  height: auto;
+}
+.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis-stopped {
+  overflow: hidden;
+}
+.lenis-scrolling iframe {
+  pointer-events: none;
+}
 </style>
 </head>
 <body>
@@ -2178,7 +2194,8 @@ workBtn.addEventListener('click', (e) => {
   // 2. Wait a bit so user sees the hero shrink/blur before moving
   setTimeout(() => {
     const target = document.querySelector('#services');
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (window.lenis) lenis.scrollTo(target);
+    else target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     
     // 3. Staggered Reveal starts after scroll begins
     setTimeout(() => {
@@ -3537,7 +3554,10 @@ runWhenReady(() => {
 
       // Scroll to reviews
       const revSec = document.getElementById('reviews');
-      if (revSec) setTimeout(() => revSec.scrollIntoView({ behavior: 'smooth' }), 300);
+      if (revSec) setTimeout(() => {
+        if (window.lenis) lenis.scrollTo(revSec);
+        else revSec.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
     });
   }
 
@@ -3585,6 +3605,27 @@ runWhenReady(() => {
     }
   });
 });
+</script>
+
+<!-- Lenis Smooth Scrolling CDN & Init -->
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+<script>
+  // Initialize Lenis
+  const lenis = new Lenis({
+    duration: 1.2,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    smoothWheel: true,
+    smoothTouch: false, // native touch on mobile to prevent lag
+    touchMultiplier: 1.5,
+  });
+  window.lenis = lenis;
+
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+
+  requestAnimationFrame(raf);
 </script>
 
 </body>
