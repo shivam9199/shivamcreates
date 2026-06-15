@@ -2246,7 +2246,11 @@ let stackWrapInView = false;
 
 // Better global mute sync
 function syncMuteState(v) {
-  if (v.closest('.scard').dataset.pos === "0") {
+  const card = v.closest('.scard');
+  const vids = card.querySelectorAll('.vid');
+  if (v === vids[0]) {
+    if (!v.muted) v.muted = true;
+  } else if (card.dataset.pos === "0") {
     globalMuted = v.muted;
   }
 }
@@ -2466,10 +2470,10 @@ function render(skipTransition = false, skipReset = []) {
       c.style.cssText = ''; // clear all inline styles at once
     }
     const vids = c.querySelectorAll('.vid');
-    vids.forEach(v => {
+    vids.forEach((v, idx) => {
       const isActiveVisible = (pos === 0 && v.classList.contains('v-active'));
       if (isActiveVisible) {
-        v.muted = globalMuted;
+        v.muted = idx === 0 ? true : globalMuted;
         if (v.getAttribute('data-user-paused') !== 'true') {
           const p = v.play(); if (p) p.catch(() => { v.muted=true; globalMuted=true; v.play().catch(()=>{}); });
         }
@@ -2713,7 +2717,7 @@ cards.forEach((c, i) => {
       if (currentVid.readyState >= 1) {
         nextVid.currentTime = currentVid.currentTime;
       }
-      nextVid.muted = currentVid.muted;
+      nextVid.muted = isLeft ? true : globalMuted;
       
       // Update classes
       vids[0].classList.toggle('v-active', isLeft);  vids[0].classList.toggle('v-hidden', !isLeft);
