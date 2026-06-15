@@ -324,12 +324,14 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(circle 
   position: relative;
 }
 .price-card {
+  box-sizing: border-box;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 24px;
-  padding: 40px 48px;
+  padding: 32px 48px;
   position: sticky;
-  top: 100px;
+  top: 110px; /* Same top offset so they stack perfectly on top of each other */
+  height: 310px; /* Uniform height to prevent lower cards from peeking out at the bottom */
   transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
   display: flex;
   flex-direction: row;
@@ -342,15 +344,12 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(circle 
   will-change: transform, filter, opacity;
 }
 .price-card:nth-child(1) {
-  top: 120px;
   z-index: 10;
 }
 .price-card:nth-child(2) {
-  top: 155px;
   z-index: 20;
 }
 .price-card:nth-child(3) {
-  top: 190px;
   z-index: 30;
 }
 .price-card:hover {
@@ -361,7 +360,7 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(circle 
   border-color: var(--accent);
   box-shadow: 0 0 30px rgba(255, 77, 0, 0.15);
   background: linear-gradient(180deg, rgba(255, 77, 0, 0.03) 0%, rgba(18, 18, 18, 0.85) 100%);
-  padding-top: 56px;
+  padding-top: 52px; /* Extra padding to clear absolute badge */
 }
 .popular-badge {
   display: inline-block;
@@ -488,6 +487,7 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(circle 
     margin-bottom: 48px;
   }
   .price-card {
+    height: auto !important; /* Reset to auto height on mobile so content doesn't clip */
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
@@ -3697,7 +3697,7 @@ runWhenReady(() => {
     }
 
     const cards = document.querySelectorAll('.price-card');
-    const stickyOffsets = [120, 155, 190];
+    const stickyOffsets = [110, 110, 110];
 
     cards.forEach((card, idx) => {
       const rect = card.getBoundingClientRect();
