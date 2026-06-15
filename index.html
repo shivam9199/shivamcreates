@@ -355,11 +355,11 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(circle 
   z-index: 10;
 }
 .price-card:nth-child(2) {
-  top: 145px;
+  top: 110px;
   z-index: 20;
 }
 .price-card:nth-child(3) {
-  top: 180px;
+  top: 110px;
   z-index: 30;
 }
 .price-card:hover {
@@ -3707,7 +3707,7 @@ runWhenReady(() => {
     }
 
     const cards = document.querySelectorAll('.price-card');
-    const stickyOffsets = [110, 145, 180];
+    const stickyOffsets = [110, 110, 110];
 
     cards.forEach((card, idx) => {
       const rect = card.getBoundingClientRect();
@@ -3734,16 +3734,15 @@ runWhenReady(() => {
       }
 
       if (maxOverlapProgress > 0) {
-        // Smoothly scale down, dim (brightness), and fade (opacity) the card underneath
+        // Smoothly scale down, dim (brightness), and fade (opacity) the card underneath in place
         const scale = 1 - (maxOverlapProgress * 0.05 * (cards.length - idx - 1));
         const brightness = 1 - (maxOverlapProgress * 0.35);
         const opacity = 1 - (maxOverlapProgress * 0.25);
-        const translateY = maxOverlapProgress * -12 * (cards.length - idx - 1);
         
-        card.style.transform = `scale(${scale}) translateY(${translateY}px)`;
+        card.style.transform = `scale(${scale})`;
         card.style.filter = `brightness(${brightness})`;
         card.style.opacity = `${opacity}`;
-        card.style.transformOrigin = 'top center';
+        card.style.transformOrigin = 'center center';
       } else {
         card.style.transform = '';
         card.style.filter = '';
