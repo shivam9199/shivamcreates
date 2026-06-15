@@ -1326,6 +1326,39 @@ body::before {
   transform: translateY(-1px);
   box-shadow: 0 0 15px rgba(255, 77, 0, 0.3);
 }
+.portal-cta {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: transform 0.15s, box-shadow 0.2s, background 0.2s, border-color 0.2s;
+  margin-right: 12px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.portal-cta:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+.mobile-only-portal {
+  display: none !important;
+}
+@media (max-width: 900px) {
+  .portal-cta {
+    display: none !important;
+  }
+  .mobile-only-portal {
+    display: inline-block !important;
+  }
+}
 .menu-btn {
   display: none;
   background: none;
@@ -1692,7 +1725,9 @@ html.lenis, html.lenis body {
       <a href="#process">Process</a>
       <a href="#work">Work</a>
       <a href="#about">About</a>
+      <a href="/portal.html" class="mobile-only-portal">Client Portal</a>
     </nav>
+    <a class="portal-cta" href="/portal.html">Client Portal</a>
     <a class="nav-cta pulse-btn" href="https://wa.me/9199495542?text=Hi%20Shivam%2C%20I%20saw%20your%20portfolio%20and%20really%20liked%20your%20work.%20I%20want%20to%20discuss%20a%20project%20and%20pricing." target="_blank">Connect Now</a>
     <button class="menu-btn" aria-label="Toggle Menu">
       <span></span>
