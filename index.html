@@ -351,12 +351,15 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(circle 
   }
 }
 .price-card:nth-child(1) {
+  top: 110px;
   z-index: 10;
 }
 .price-card:nth-child(2) {
+  top: 145px;
   z-index: 20;
 }
 .price-card:nth-child(3) {
+  top: 180px;
   z-index: 30;
 }
 .price-card:hover {
@@ -3704,7 +3707,7 @@ runWhenReady(() => {
     }
 
     const cards = document.querySelectorAll('.price-card');
-    const stickyOffsets = [110, 110, 110];
+    const stickyOffsets = [110, 145, 180];
 
     cards.forEach((card, idx) => {
       const rect = card.getBoundingClientRect();
