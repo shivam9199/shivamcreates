@@ -317,7 +317,7 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(circle 
 .pricing-grid {
   display: flex;
   flex-direction: column;
-  gap: 12vh;
+  gap: 25vh; /* Increased gap to give cards more scroll distance between transitions */
   padding: 0 6vw;
   max-width: 1200px;
   margin: 0 auto 100px;
@@ -342,6 +342,13 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(circle 
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   will-change: transform, filter, opacity;
+}
+@media (min-width: 992px) {
+  /* Disable transition on transform, filter, and opacity once revealed, so scrolling is lag-free */
+  .price-card.reveal-active {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease !important;
+    transition-delay: 0s !important;
+  }
 }
 .price-card:nth-child(1) {
   z-index: 10;
